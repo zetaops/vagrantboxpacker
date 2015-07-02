@@ -62,7 +62,7 @@ After a long wait your box will be ready.
 Now add it vagrant list and give a name to your box
 
 ```
-vagrant box add olusan_box_adi --name mybox
+vagrant box add created_box_name --name mybox
 
 ```
 

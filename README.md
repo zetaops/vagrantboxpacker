@@ -82,7 +82,7 @@ cd mybox
 vagrant init
 ```
 
-Change ```config.vm.box = "base"``` with config.vm.box = "mybox" in Vagrantfile and it's done.
+Change ```config.vm.box = "base"``` with ```config.vm.box = "mybox"``` in Vagrantfile and it's done.
 
 ```
 

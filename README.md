@@ -24,7 +24,7 @@ Change user name(mine is cemg) in template.json with yours.
 ```
 After that login atlas.hashicorp website and press Builds.
 
-Answer questions, generate tokens and verify tokens.
+Answer questions, generate tokens and verify tokens and paste them into your terminal.
 
 Give a name your build and push.
 
@@ -82,7 +82,7 @@ cd mybox
 vagrant init
 ```
 
-Change ```config.vm.box=""``` with mybox and it's done.
+Change ```config.vm.box=""``` with mybox in Vagrantfile and it's done.
 
 ```
 

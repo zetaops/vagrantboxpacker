@@ -46,15 +46,13 @@ mkdir ~/ulakbus;
 
 zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose;
 
-echo '#changing password
-command=update_password
-password=ulakbus
+echo 'command=update_password
 path=/opt/zato/ulakbus/web-admin
 store_config=True
 username=admin
-verbose=True
-' > ~/ulakbus/zato-pw.conf
-zato from-config ~/ulakbus/zato-pw.conf
+password=ulakbus' > ~/ulakbus/zatopw.conf
+
+zato from-config ~/ulakbus/zatopw.conf
 "
 
 apt-get install -y virtualenvwrapper
@@ -73,14 +71,13 @@ source env/bin/activate
 pip install --upgrade pip
 pip install ipython
 
-# pyoko requirements
+
 pip install riak
 pip install enum34
 pip install six
-# install pyoko
+
 pip install git+https://github.com/zetaops/pyoko.git
 
-# ulakbus requirements
 pip install falcon
 pip install beaker
 pip install redis
@@ -91,8 +88,6 @@ pip install git+https://github.com/zetaops/zengine.git#egg=zengine
 # install ulakbus dev
 git clone https://github.com/zetaops/ulakbus.git
 git clone https://github.com/zetaops/ulakbus-ui.git
-
-cd /app/ulakbus
 
 echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
 

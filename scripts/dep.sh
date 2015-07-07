@@ -3,7 +3,7 @@
 # Setup the the box. This runs as root
 
 apt-get -y update
-
+echo "ulakbus" > /etc/hostname
 apt-get -y install curl
 apt-get -y install git
 apt-get -y install apt-file
@@ -44,7 +44,18 @@ apt-get install -y zato
 sudo su - zato sh -c "
 mkdir ~/ulakbus;
 
-zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose;"
+zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose;
+
+echo '#changing password
+command=update_password
+password=ulakbus
+path=/opt/zato/ulakbus/web-admin
+store_config=True
+username=admin
+verbose=True
+' > ~/ulakbus/zato-pw.conf
+zato from-config ~/ulakbus/zato-pw.conf
+"
 
 apt-get install -y virtualenvwrapper
 
@@ -54,14 +65,35 @@ mkdir /app
 chown ulakbus:ulakbus /app -Rf
 
 sudo su - ulakbus sh -c "
-cd ~;
+cd ~
 
-virtualenv --no-site-packages env;
-source env/bin/activate;
+virtualenv --no-site-packages env
+source env/bin/activate
 
-pip install --upgrade pip;
-git clone https://github.com/zetaops/ulakbus.git;
-cd /app/ulakbus;
-pip install -r requirements.txt;
-pip install git+https://github.com/zetaops/pyoko.git;
+pip install --upgrade pip
+pip install ipython
+
+# pyoko requirements
+pip install riak
+pip install enum34
+pip install six
+# install pyoko
+pip install git+https://github.com/zetaops/pyoko.git
+
+# ulakbus requirements
+pip install falcon
+pip install beaker
+pip install redis
+pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
+pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
+pip install git+https://github.com/zetaops/zengine.git#egg=zengine
+
+# install ulakbus dev
+git clone https://github.com/zetaops/ulakbus.git
+git clone https://github.com/zetaops/ulakbus-ui.git
+
+cd /app/ulakbus
+
+echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
+
 "

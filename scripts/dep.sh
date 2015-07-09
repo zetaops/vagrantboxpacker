@@ -62,8 +62,6 @@ mkdir /app
 
 chown ulakbus:ulakbus /app -Rf
 
-echo "export PYOKO_SETTINGS='ulakbus.settings'" >> /etc/profile
-
 sudo su - ulakbus sh -c "
 cd ~
 

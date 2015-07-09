@@ -62,6 +62,8 @@ mkdir /app
 
 chown ulakbus:ulakbus /app -Rf
 
+echo "export PYOKO_SETTINGS='ulakbus.settings'" >> /etc/profile
+
 sudo su - ulakbus sh -c "
 cd ~
 
@@ -90,5 +92,19 @@ git clone https://github.com/zetaops/ulakbus.git
 git clone https://github.com/zetaops/ulakbus-ui.git
 
 echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
+echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
+
+
+cd ~/env/local/lib/python2.7/site-packages/pyoko/db
+wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema_template.xml
 
 "
+
+ln -s /app/pyoko/pyoko /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
+
+cd /app/env/lib/python2.7/site-packages/google/
+touch __init__.py

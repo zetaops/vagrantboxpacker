@@ -96,12 +96,14 @@ echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
 cd ~/env/local/lib/python2.7/site-packages/pyoko/db
 wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema_template.xml
 
+touch /app/env/lib/python2.7/site-packages/google/__init__.py
 "
 
-ln -s /app/pyoko/pyoko /opt/zato/2.0.5/zato_extra_paths/
+sudo su - zato sh -c "
+
+ln -s /app/env/lib/python2.7/site-packages/pyoko /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
-
-touch /app/env/lib/python2.7/site-packages/google/__init__.py
+"

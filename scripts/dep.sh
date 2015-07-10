@@ -82,6 +82,7 @@ pip install git+https://github.com/zetaops/pyoko.git
 pip install falcon
 pip install beaker
 pip install redis
+pip install passlib
 pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
 pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 pip install git+https://github.com/zetaops/zengine.git#egg=zengine

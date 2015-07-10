@@ -92,8 +92,6 @@ git clone https://github.com/zetaops/ulakbus.git
 git clone https://github.com/zetaops/ulakbus-ui.git
 
 echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
-echo '/app/ulakbus-ui' >> /app/env/lib/python2.7/site-packages/ulakbus-ui.pth
-
 
 cd ~/env/local/lib/python2.7/site-packages/pyoko/db
 wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema_template.xml

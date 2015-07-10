@@ -3,7 +3,6 @@
 # Setup the the box. This runs as root
 
 apt-get -y update
-echo "ulakbus" > /etc/hostname
 apt-get -y install curl
 apt-get -y install git
 apt-get -y install apt-file

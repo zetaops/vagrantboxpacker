@@ -8,7 +8,8 @@ apt-get -y install git
 apt-get -y install apt-file
 apt-file update
 apt-get -y install software-properties-common
-# You can install anything you need here.
+
+apt-get -y install vim
 
 apt-get -y update
 apt-get -y upgrade

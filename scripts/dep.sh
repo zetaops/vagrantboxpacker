@@ -100,7 +100,7 @@ touch /app/env/lib/python2.7/site-packages/google/__init__.py
 "
 
 sudo su - zato sh -c "
-
+ln -s /app/ulakbus/ulakbus /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/pyoko /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/

@@ -108,12 +108,3 @@ ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_pa
 ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
 "
-
-riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false}}'
-riak-admin bucket-type activate models
-
-sudo su - ulakbus sh -c "
-source env/bin/activate
-cd ~/ulakbus/ulakbus
-python manage.py update_schema --bucket all
-"

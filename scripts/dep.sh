@@ -108,3 +108,11 @@ ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_pa
 ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
 "
+
+ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
+ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
+ln -s /opt/zato/ulakbus/server2 /etc/zato/components-enabled/ulakbus.server2
+ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
+
+service zato start
+

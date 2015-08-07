@@ -7,16 +7,18 @@ https://atlas.hashicorp.com/
 Download Packer
 https://packer.io/downloads.html
 
+Type ``` vagrant login ``` on terminal and enter your atlas.hashicorp information to get access.
+
 Now clone this repo
 
 ```
-git clone https://github.com/dyrnade/vagrantboxpacker
+git clone https://github.com/zetaops/vagrantboxpacker.git
 cd vagrantboxpacker
 ```
-Change user name(mine is cemg) in template.json with yours.
+Change user name(mine is zetaops) in template.json with yours.
 ```
 "push": {
-     "name": "cemg",
+     "name": "zetaops",
      "vcs": true
    },
 
@@ -33,6 +35,8 @@ packer push -name cemg/example2 template.json
 
 ```
 
+###Important ###
+At every box build, change your version number, which is at the bottom of ``` template.json ``` file.
 
 Local Build
 ===========
@@ -46,7 +50,7 @@ https://packer.io/downloads.html
 Now clone this repo
 
 ```
-git clone https://github.com/dyrnade/vagrantboxpacker
+git clone https://github.com/zetaops/vagrantboxpacker.git
 cd vagrantboxpacker
 ```
 

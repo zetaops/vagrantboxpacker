@@ -8,7 +8,8 @@ apt-get -y install git
 apt-get -y install apt-file
 apt-file update
 apt-get -y install software-properties-common
-# You can install anything you need here.
+
+apt-get -y install vim htop multitail sysstat nmap tcpdump
 
 apt-get -y update
 apt-get -y upgrade
@@ -100,7 +101,7 @@ touch /app/env/lib/python2.7/site-packages/google/__init__.py
 "
 
 sudo su - zato sh -c "
-
+ln -s /app/ulakbus/ulakbus /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/pyoko /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/
@@ -108,11 +109,10 @@ ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_pat
 ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
 "
 
-riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false}}'
-riak-admin bucket-type activate models
+ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
+ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
+ln -s /opt/zato/ulakbus/server2 /etc/zato/components-enabled/ulakbus.server2
+ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
 
-sudo su - ulakbus sh -c "
-source env/bin/activate
-cd ~/ulakbus/ulakbus
-python manage.py update_schema --bucket all
-"
+service zato start
+

@@ -120,3 +120,4 @@ service zato start
 riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "allow_mult":false}}'
 riak-admin bucket-type activate pyoko_models
 
+rm -rf /var/lib/apt/lists/* 

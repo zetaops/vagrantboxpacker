@@ -26,6 +26,16 @@ curl -s https://packagecloud.io/install/repositories/zetaops/riak/script.deb.sh 
 apt-get install riak=2.1.1-1
 
 sed -i "s/search = off/search = on/" /etc/riak/riak.conf
+sed -i "s/anti_entropy = active/anti_entropy = passive/" /etc/riak/riak.conf
+sed -i "s/storage_backend = bitcask/storage_backend = multi/" /etc/riak/riak.conf
+
+echo "multi_backend.bitcask_mult.storage_backend = bitcask
+multi_backend.bitcask_mult.bitcask.data_root = /var/lib/riak/bitcask_mult
+
+multi_backend.leveldb_mult.storage_backend = leveldb
+multi_backend.leveldb_mult.leveldb.data_root = /var/lib/riak/leveldb_mult
+
+multi_backend.default = bitcask_mult" >> /etc/riak/riak.conf
 
 service riak restart
 
@@ -59,6 +69,7 @@ apt-get install -y virtualenvwrapper
 
 mkdir /app
 /usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
+chown ulakbus:ulakbus /app -Rf
 
 #Ulakbus environment variables
 
@@ -76,8 +87,6 @@ source /etc/profile
 
 #Add ulakbus user to sudoers
 adduser ulakbus sudo
-
-chown ulakbus:ulakbus /app -Rf
 
 sudo su - ulakbus sh -c "
 cd ~

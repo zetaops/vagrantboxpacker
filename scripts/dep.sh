@@ -60,6 +60,20 @@ apt-get install -y virtualenvwrapper
 mkdir /app
 /usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
 
+#Ulakbus environment variables
+
+echo "export PYTHONIOENCODING=UTF-8
+export ZENGINE_SETTINGS=ulakbus.settings
+export LC_CTYPE=en_US.UTF-8
+export RIAK_PORT=8098
+export REDIS_SERVER=127.0.0.1:6379
+export RIAK_SERVER=127.0.0.1
+export RIAK_PROTOCOL=http
+export PYOKO_SETTINGS=ulakbus.settings
+export PYTHONUNBUFFERED=1" >> /etc/profile
+
+source /etc/profile
+
 #Add ulakbus user to sudoers
 adduser ulakbus sudo
 

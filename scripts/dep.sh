@@ -9,7 +9,7 @@ apt-get -y install apt-file
 apt-file update
 apt-get -y install software-properties-common
 
-apt-get -y install vim htop multitail sysstat nmap tcpdump
+apt-get -y install vim htop multitail sysstat nmap tcpdump python-dev
 
 apt-get -y update
 apt-get -y upgrade
@@ -60,9 +60,10 @@ apt-get install -y virtualenvwrapper
 mkdir /app
 /usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
 
-chown ulakbus:ulakbus /app -Rf
+#Add ulakbus user to sudoers
+adduser ulakbus sudo
 
-echo "export PYOKO_SETTINGS='ulakbus.settings'" >> /etc/profile
+chown ulakbus:ulakbus /app -Rf
 
 sudo su - ulakbus sh -c "
 cd ~
@@ -119,4 +120,3 @@ service zato start
 
 riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "allow_mult":false}}'
 riak-admin bucket-type activate pyoko_models
-

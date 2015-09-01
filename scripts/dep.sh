@@ -88,6 +88,21 @@ source /etc/profile
 #Add ulakbus user to sudoers
 adduser ulakbus sudo
 
+
+# System-Wide Ulakbus, Pyoko, Zengine Dependicies
+
+pip install riak
+pip install enum34
+pip install six
+pip install lazy_object_proxy
+pip install falcon
+pip install beaker
+pip install redis
+pip install passlib
+pip install Werkzeug
+pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
+pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
+
 sudo su - ulakbus sh -c "
 cd ~
 
@@ -97,39 +112,42 @@ source env/bin/activate
 pip install --upgrade pip
 pip install ipython
 
+# install pyoko
+git clone https://github.com/zetaops/pyoko.git
 
-pip install riak
-pip install enum34
-pip install six
-
-pip install git+https://github.com/zetaops/pyoko.git
-
-pip install falcon
-pip install beaker
-pip install redis
-pip install passlib
-pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
-pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
-pip install git+https://github.com/zetaops/zengine.git#egg=zengine
-
-# install ulakbus dev
+# install ulakbus
 git clone https://github.com/zetaops/ulakbus.git
-git clone https://github.com/zetaops/ulakbus-ui.git
+cd ulakbus
+python setup.py install
 
-echo '/app/ulakbus' >> /app/env/lib/python2.7/site-packages/ulakbus.pth
+# install zengine
+git clone https://github.com/zetaops/zengine.git
+
+cd  ~/env/lib/python2.7/site-packages/
+mkdir tmp
+mv Ulakbus*.egg zengine*.egg Pyoko*.egg tmp/
+ln -s ~/pyoko/pyoko ~/env/lib/python2.7/site-packages/
+ln -s ~/ulakbus/ulakbus ~/env/lib/python2.7/site-packages/
+ln -s ~/zengine/zengine ~/env/lib/python2.7/site-packages/
 
 cd ~/env/local/lib/python2.7/site-packages/pyoko/db
 wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema_template.xml
-
-touch /app/env/lib/python2.7/site-packages/google/__init__.py
 "
 
+
 sudo su - zato sh -c "
+ln -s /app/pyoko/pyoko      /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/zengine/zengine  /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbus/ulakbus /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/pyoko /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/redis /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/SpiffWorkflow /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/werkzeug /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/lazy_object_proxy /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/falcon /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/cryptography /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/beaker /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
 "
 

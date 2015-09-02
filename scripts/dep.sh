@@ -115,13 +115,14 @@ pip install ipython
 # install pyoko
 git clone https://github.com/zetaops/pyoko.git
 
+# install zengine
+git clone https://github.com/zetaops/zengine.git
+
 # install ulakbus
 git clone https://github.com/zetaops/ulakbus.git
 cd ulakbus
 python setup.py install
 
-# install zengine
-git clone https://github.com/zetaops/zengine.git
 
 cd  ~/env/lib/python2.7/site-packages/
 mkdir tmp

@@ -97,18 +97,6 @@ source env/bin/activate
 pip install --upgrade pip
 pip install ipython
 
-pip install riak
-pip install enum34
-pip install six
-pip install lazy_object_proxy
-pip install falcon
-pip install beaker
-pip install redis
-pip install passlib
-pip install Werkzeug
-pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
-pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
-
 # install pyoko
 git clone https://github.com/zetaops/pyoko.git
 
@@ -117,11 +105,12 @@ git clone https://github.com/zetaops/zengine.git
 
 # install ulakbus
 git clone https://github.com/zetaops/ulakbus.git
+
 cd ulakbus
 python setup.py install
 
 cd  ~/env/lib/python2.7/site-packages/
-rm Ulakbus*.egg zengine*.egg Pyoko*.egg 
+rm -rf Ulakbus*.egg zengine*.egg Pyoko*.egg 
 
 easy_install ~/env/lib/python2.7/site-packages/*.egg
 

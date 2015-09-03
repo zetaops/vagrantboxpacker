@@ -88,8 +88,14 @@ source /etc/profile
 #Add ulakbus user to sudoers
 adduser ulakbus sudo
 
+sudo su - ulakbus sh -c "
+cd ~
 
-# System-Wide Ulakbus, Pyoko, Zengine Dependicies
+virtualenv --no-site-packages env
+source env/bin/activate
+
+pip install --upgrade pip
+pip install ipython
 
 pip install riak
 pip install enum34
@@ -103,15 +109,6 @@ pip install Werkzeug
 pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
 pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 
-sudo su - ulakbus sh -c "
-cd ~
-
-virtualenv --no-site-packages env
-source env/bin/activate
-
-pip install --upgrade pip
-pip install ipython
-
 # install pyoko
 git clone https://github.com/zetaops/pyoko.git
 
@@ -123,18 +120,18 @@ git clone https://github.com/zetaops/ulakbus.git
 cd ulakbus
 python setup.py install
 
-
 cd  ~/env/lib/python2.7/site-packages/
-mkdir tmp
-mv Ulakbus*.egg zengine*.egg Pyoko*.egg tmp/
+rm Ulakbus*.egg zengine*.egg Pyoko*.egg 
+
+easy_install ~/env/lib/python2.7/site-packages/*.egg
+
 ln -s ~/pyoko/pyoko ~/env/lib/python2.7/site-packages/
 ln -s ~/ulakbus/ulakbus ~/env/lib/python2.7/site-packages/
 ln -s ~/zengine/zengine ~/env/lib/python2.7/site-packages/
 
-cd ~/env/local/lib/python2.7/site-packages/pyoko/db
-wget https://raw.githubusercontent.com/zetaops/pyoko/master/pyoko/db/solr_schema_template.xml
-"
+touch ~/env/lib/python2.7/site-packages/google/__init__.py
 
+"
 
 sudo su - zato sh -c "
 ln -s /app/pyoko/pyoko      /opt/zato/2.0.5/zato_extra_paths/
@@ -150,6 +147,7 @@ ln -s /app/env/lib/python2.7/site-packages/falcon /opt/zato/2.0.5/zato_extra_pat
 ln -s /app/env/lib/python2.7/site-packages/cryptography /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/beaker /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
 "
 
 ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer

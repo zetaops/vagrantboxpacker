@@ -80,7 +80,9 @@ sudo su - ulakbus sh -c "
 cd ~
 
 virtualenv --no-site-packages ulakbusenv
-source env/bin/activate
+wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars.txt
+cat env-vars.txt >> ulakbusenv/bin/activate
+source ulakbusenv/bin/activate
 
 pip install --upgrade pip
 pip install ipython

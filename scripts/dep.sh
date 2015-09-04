@@ -54,8 +54,10 @@ apt-get install -y zato
 sudo su - zato sh -c "
 mkdir ~/ulakbus;
 
+# Create a new zato project named ulakbus
 zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose;
 
+# Change password of zato admin to new one.(Password = ulakbus)
 echo 'command=update_password
 path=/opt/zato/ulakbus/web-admin
 store_config=True
@@ -71,43 +73,19 @@ mkdir /app
 /usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
 chown ulakbus:ulakbus /app -Rf
 
-#Ulakbus environment variables
-
-echo "export PYTHONIOENCODING=UTF-8
-export ZENGINE_SETTINGS=ulakbus.settings
-export LC_CTYPE=en_US.UTF-8
-export RIAK_PORT=8098
-export REDIS_SERVER=127.0.0.1:6379
-export RIAK_SERVER=127.0.0.1
-export RIAK_PROTOCOL=http
-export PYOKO_SETTINGS=ulakbus.settings
-export PYTHONUNBUFFERED=1" >> /etc/profile
-
-source /etc/profile
-
 #Add ulakbus user to sudoers
 adduser ulakbus sudo
 
 sudo su - ulakbus sh -c "
 cd ~
 
-virtualenv --no-site-packages env
-source env/bin/activate
+virtualenv --no-site-packages ulakbusenv
+wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars.txt
+cat env-vars.txt >> ulakbusenv/bin/activate
+source ulakbusenv/bin/activate
 
 pip install --upgrade pip
 pip install ipython
-
-pip install riak
-pip install enum34
-pip install six
-pip install lazy_object_proxy
-pip install falcon
-pip install beaker
-pip install redis
-pip install passlib
-pip install Werkzeug
-pip install git+https://github.com/didip/beaker_extensions.git#egg=beaker_extensions
-pip install git+https://github.com/zetaops/SpiffWorkflow.git#egg=SpiffWorkflow
 
 # install pyoko
 git clone https://github.com/zetaops/pyoko.git
@@ -117,48 +95,59 @@ git clone https://github.com/zetaops/zengine.git
 
 # install ulakbus
 git clone https://github.com/zetaops/ulakbus.git
-cd ulakbus
-python setup.py install
 
-cd  ~/env/lib/python2.7/site-packages/
-rm Ulakbus*.egg zengine*.egg Pyoko*.egg 
+easy_install --always-unzip ulakbus
 
-easy_install ~/env/lib/python2.7/site-packages/*.egg
+cd  ~/ulakbusenv/lib/python2.7/site-packages/
+rm -rf Ulakbus*.egg zengine*.egg Pyoko*.egg
 
-ln -s ~/pyoko/pyoko ~/env/lib/python2.7/site-packages/
-ln -s ~/ulakbus/ulakbus ~/env/lib/python2.7/site-packages/
-ln -s ~/zengine/zengine ~/env/lib/python2.7/site-packages/
+# To use pyoko, ulakbus, zengine
+ln -s ~/pyoko/pyoko ~/ulakbusenv/lib/python2.7/site-packages/
+ln -s ~/ulakbus/ulakbus ~/ulakbusenv/lib/python2.7/site-packages/
+ln -s ~/zengine/zengine ~/ulakbusenv/lib/python2.7/site-packages/
 
-touch ~/env/lib/python2.7/site-packages/google/__init__.py
-
+# Necessary to use riak from zato user
+touch ~/ulakbusenv/lib/python2.7/site-packages/google/__init__.py
 "
+# Create symbolic links for all dependecies and pyoko, zengine, ulakbus for Zato
 
 sudo su - zato sh -c "
-ln -s /app/pyoko/pyoko      /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/zengine/zengine  /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/ulakbus/ulakbus /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/riak /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/riak_pb /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/redis /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/SpiffWorkflow /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/werkzeug /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/lazy_object_proxy /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/falcon /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/cryptography /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/beaker /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/passlib /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/env/lib/python2.7/site-packages/google /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/pyoko/pyoko                                                                      /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/zengine/zengine                                                                  /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbus/ulakbus                                                                  /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/six-*/                                    /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/riak-*/riak                               /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/riak_pb-*/riak_pb                         /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/redis-*/redis                             /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/SpiffWorkflow-*/SpiffWorkflow             /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/Werkzeug-*/werkzeug                       /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/lazy_object_proxy-*/lazy_object_proxy     /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/falcon-*/falcon                           /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/cryptography-*/cryptography               /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/Beaker-*/beaker                           /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/passlib-*/passlib                         /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/google                                    /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/enum34-*/enum                             /opt/zato/2.0.5/zato_extra_paths/
 "
+
+# Create symbolic links for zato project to start them at login
 
 ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
 ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
 ln -s /opt/zato/ulakbus/server2 /etc/zato/components-enabled/ulakbus.server2
 ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
 
+# Start zato service
 service zato start
 
 
-riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "allow_mult":false}}'
+riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
+riak-admin bucket-type create zengine_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
+riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
+
 riak-admin bucket-type activate pyoko_models
+riak-admin bucket-type activate zengine_models
+riak-admin bucket-type activate models
+
 
 rm -rf /var/lib/apt/lists/*

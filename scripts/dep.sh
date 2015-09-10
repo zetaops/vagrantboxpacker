@@ -79,35 +79,91 @@ adduser ulakbus sudo
 sudo su - ulakbus sh -c "
 cd ~
 
+#ulakbus virtualenv
 virtualenv --no-site-packages ulakbusenv
-wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars.txt
-cat env-vars.txt >> ulakbusenv/bin/activate
-source ulakbusenv/bin/activate
+wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/ulakbus_postactivate
+cat ulakbus_postactivate >> ulakbusenv/bin/activate
+
+#pyoko virtualenv
+virtualenv --no-site-packages pyokoenv
+wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/pyoko_postactivate
+cat pyoko_postactivate >> ulakbusenv/bin/activate
+
+#zengine virtualenv
+virtualenv --no-site-packages zengineenv
+wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/zengine_postactivate
+cat zengine_postactivate >> ulakbusenv/bin/activate
+
+# clone pyoko from github
+git clone https://github.com/zetaops/pyoko.git
+
+# clone zengine from github
+git clone https://github.com/zetaops/zengine.git
+
+# clone ulakbus from github
+git clone https://github.com/zetaops/ulakbus.git
+
+
+#activate ulakbusenv
+source ~/ulakbusenv/bin/activate
 
 pip install --upgrade pip
 pip install ipython
 
-# install pyoko
-git clone https://github.com/zetaops/pyoko.git
+cd ~/ulakbusenv
+pip install -r requirements.txt
 
-# install zengine
-git clone https://github.com/zetaops/zengine.git
+pip uninstall Pyoko
+pip uninstall zengine
 
-# install ulakbus
-git clone https://github.com/zetaops/ulakbus.git
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*
 
-easy_install --always-unzip ulakbus
+deactivate
 
-cd  ~/ulakbusenv/lib/python2.7/site-packages/
-rm -rf Ulakbus*.egg zengine*.egg Pyoko*.egg
 
-# To use pyoko, ulakbus, zengine
+#activate pyokoenv
+source ~/pyokoenv/bin/activate
+
+pip install --upgrade pip
+pip install ipython
+
+cd ~/pyokoenv
+pip install -r requirements.txt
+
+deactivate
+
+
+#activate zengineenv
+source ~/zengineenv/bin/activate
+
+pip install --upgrade pip
+pip install ipython
+
+cd ~/zengineenv
+pip install -r requirements.txt
+
+pip uninstall Pyoko
+
+rm -rf ~/zengineenv/lib/python2.7/site-packages/Pyoko*
+
+deactivate
+
+# Copy libraries: pyoko, ulakbus, zengine to ulakbusenv
 ln -s ~/pyoko/pyoko ~/ulakbusenv/lib/python2.7/site-packages/
 ln -s ~/ulakbus/ulakbus ~/ulakbusenv/lib/python2.7/site-packages/
 ln -s ~/zengine/zengine ~/ulakbusenv/lib/python2.7/site-packages/
 
 # Necessary to use riak from zato user
 touch ~/ulakbusenv/lib/python2.7/site-packages/google/__init__.py
+
+# Copy libraries: pyoko, zengine to zengineenv
+ln -s ~/pyoko/pyoko ~/zengineenv/lib/python2.7/site-packages/
+ln -s ~/zengine/zengine ~/zengineenv/lib/python2.7/site-packages/
+
+# Copy libraries: pyoko to pyokoenv
+ln -s ~/pyoko/pyoko ~/pyokoenv/lib/python2.7/site-packages/
+
 "
 # Create symbolic links for all dependecies and pyoko, zengine, ulakbus for Zato
 
@@ -123,7 +179,6 @@ ln -s /app/ulakbusenv/lib/python2.7/site-packages/SpiffWorkflow-*/SpiffWorkflow 
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/Werkzeug-*/werkzeug                       /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/lazy_object_proxy-*/lazy_object_proxy     /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/falcon-*/falcon                           /opt/zato/2.0.5/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/cryptography-*/cryptography               /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/Beaker-*/beaker                           /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/passlib-*/passlib                         /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/google                                    /opt/zato/2.0.5/zato_extra_paths/

@@ -53,8 +53,9 @@ apt-get install -y zato
 
 sudo su - zato sh -c "
 
-wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/pyoko_postactivate
-
+https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/zato_environment_variables
+cat ~/zato_environment_variables >> ~/.profile
+source ~/.profile
 
 mkdir ~/ulakbus;
 

@@ -8,4 +8,3 @@ export RIAK_PROTOCOL=http
 export PYOKO_SETTINGS=tests.settings
 export PYTHONUNBUFFERED=1
 export DEFAULT_BUCKET_TYPE='pyoko_models'
-export LOG_DIR="/home/$USER/log/"

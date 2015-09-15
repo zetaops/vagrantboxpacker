@@ -7,7 +7,7 @@ RIAK_SERVER=127.0.0.1
 RIAK_PROTOCOL=http
 PYOKO_SETTINGS='ulakbus.settings'
 PYTHONUNBUFFERED=1
-DEFAULT_BUCKET_TYPE='pyoko_models'
+DEFAULT_BUCKET_TYPE='models'
 
 export PYTHONIOENCODING=UTF-8
 export ZENGINE_SETTINGS='ulakbus.settings'
@@ -18,4 +18,4 @@ export RIAK_SERVER=127.0.0.1
 export RIAK_PROTOCOL=http
 export PYOKO_SETTINGS='ulakbus.settings'
 export PYTHONUNBUFFERED=1
-export DEFAULT_BUCKET_TYPE='pyoko_models'
+export DEFAULT_BUCKET_TYPE='models'

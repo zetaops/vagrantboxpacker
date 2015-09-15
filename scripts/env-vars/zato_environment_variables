@@ -1,21 +1,21 @@
 PYTHONIOENCODING=UTF-8
-ZENGINE_SETTINGS='tests.settings'
+ZENGINE_SETTINGS='ulakbus.settings'
 LC_CTYPE=en_US.UTF-8
 RIAK_PORT=8098
 REDIS_SERVER=127.0.0.1:6379
 RIAK_SERVER=127.0.0.1
 RIAK_PROTOCOL=http
-PYOKO_SETTINGS='tests.settings'
+PYOKO_SETTINGS='ulakbus.settings'
 PYTHONUNBUFFERED=1
 DEFAULT_BUCKET_TYPE='pyoko_models'
 
 export PYTHONIOENCODING=UTF-8
-export ZENGINE_SETTINGS='tests.settings'
+export ZENGINE_SETTINGS='ulakbus.settings'
 export LC_CTYPE=en_US.UTF-8
 export RIAK_PORT=8098
 export REDIS_SERVER=127.0.0.1:6379
 export RIAK_SERVER=127.0.0.1
 export RIAK_PROTOCOL=http
-export PYOKO_SETTINGS='tests.settings'
+export PYOKO_SETTINGS='ulakbus.settings'
 export PYTHONUNBUFFERED=1
 export DEFAULT_BUCKET_TYPE='pyoko_models'

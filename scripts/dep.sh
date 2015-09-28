@@ -60,7 +60,7 @@ source ~/.profile
 mkdir ~/ulakbus;
 
 # Create a new zato project named ulakbus
-zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose;
+zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --servers 1 --verbose;
 
 # Change password of zato admin to new one.(Password = ulakbus)
 echo 'command=update_password

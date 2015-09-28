@@ -35,7 +35,9 @@ multi_backend.bitcask_mult.bitcask.data_root = /var/lib/riak/bitcask_mult
 multi_backend.leveldb_mult.storage_backend = leveldb
 multi_backend.leveldb_mult.leveldb.data_root = /var/lib/riak/leveldb_mult
 
-multi_backend.default = bitcask_mult" >> /etc/riak/riak.conf
+multi_backend.default = bitcask_mult
+
+search.solr.jvm_options = -d64 -Xms256m -Xmx256m -XX:+UseStringCache -XX:+UseCompressedOops" >> /etc/riak/riak.conf
 
 service riak restart
 

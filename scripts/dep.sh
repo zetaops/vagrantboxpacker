@@ -35,7 +35,9 @@ multi_backend.bitcask_mult.bitcask.data_root = /var/lib/riak/bitcask_mult
 multi_backend.leveldb_mult.storage_backend = leveldb
 multi_backend.leveldb_mult.leveldb.data_root = /var/lib/riak/leveldb_mult
 
-multi_backend.default = bitcask_mult" >> /etc/riak/riak.conf
+multi_backend.default = bitcask_mult
+
+search.solr.jvm_options = -d64 -Xms256m -Xmx256m -XX:+UseStringCache -XX:+UseCompressedOops" >> /etc/riak/riak.conf
 
 service riak restart
 
@@ -53,14 +55,16 @@ apt-get install -y zato
 
 sudo su - zato sh -c "
 
-https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/zato_environment_variables
+wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/zato_environment_variables
 cat ~/zato_environment_variables >> ~/.profile
 source ~/.profile
 
 mkdir ~/ulakbus;
+/usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
+chown ulakbus:ulakbus /app -Rf
 
 # Create a new zato project named ulakbus
-zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --verbose;
+zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --servers 1 --verbose;
 
 # Change password of zato admin to new one.(Password = ulakbus)
 echo 'command=update_password
@@ -75,8 +79,6 @@ zato from-config ~/ulakbus/zatopw.conf
 apt-get install -y virtualenvwrapper
 
 mkdir /app
-/usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
-chown ulakbus:ulakbus /app -Rf
 
 #Add ulakbus user to sudoers
 adduser ulakbus sudo

@@ -14,6 +14,8 @@ apt-get -y install vim htop multitail sysstat nmap tcpdump python-dev
 apt-get -y update
 apt-get -y upgrade
 
+sed -i "1s/^/import sys \nsys.setdefaultencoding('utf-8') \n /" /usr/lib/python2.7/sitecustomize.py
+
 ulimit -n 65536
 echo "* soft nofile 65536" >> /etc/security/limits.conf
 echo "* hard nofile 65536" >> /etc/security/limits.conf
@@ -121,9 +123,11 @@ cd ~/ulakbus
 pip install -r requirements.txt
 
 pip uninstall Pyoko
+pip uninstall pyoko
 pip uninstall zengine
 
 rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*
 rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*
 
 deactivate

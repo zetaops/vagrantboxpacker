@@ -122,14 +122,6 @@ pip install ipython
 cd ~/ulakbus
 pip install -r requirements.txt
 
-pip uninstall Pyoko
-pip uninstall pyoko
-pip uninstall zengine
-
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*
-
 deactivate
 
 
@@ -196,13 +188,13 @@ ln -s /app/ulakbusenv/lib/python2.7/site-packages/beaker                        
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/passlib                         /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/google                                    /opt/zato/2.0.5/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/enum                             /opt/zato/2.0.5/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/celery                           /opt/zato/2.0.5/zato_extra_paths/
 "
 
 # Create symbolic links for zato project to start them at login
 
 ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
 ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
-ln -s /opt/zato/ulakbus/server2 /etc/zato/components-enabled/ulakbus.server2
 ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
 
 # Start zato service

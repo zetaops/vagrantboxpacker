@@ -66,7 +66,7 @@ sudo su - zato
 
 - Gelistirme ortamina baglandiginizda, zato componentleri otomatik olarak baslatilmistir.
  - Zato kullanicisindayken zato componentlerini baslat, durdurmak veya yeniden baslatmak isterseniz, ulakbus klasoru icindeki zato-qs-restart.sh, zato-qs-start.sh, zato-qs-stop.sh scriptlerini kullaniniz.Ornek olarak yeniden baslatmak isterseniz,
- - 
+ 
    ```bash
    ./ulakbus/zato-qs-restart.sh
    ```

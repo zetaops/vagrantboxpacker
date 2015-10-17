@@ -46,7 +46,7 @@ Asagidaki satiri;
 ```bash
 search.solr.jvm_options = -d64 -Xms256m -Xmx256m -XX:+UseStringCache -XX:+UseCompressedOops
 ```
-alttaki ile degistirin.Bu Riak jvm memory'i icin kullanilan bellegi 512 MB'ta yukselticektir.
+alttaki ile degistirin.Bu Riak jvm memory'i icin kullanilan bellegi 512 MB'ta yukseltecektir.
 
 ```bash
 search.solr.jvm_options = -d64 -Xms512m -Xmx512m -XX:+UseStringCache -XX:+UseCompressedOops
@@ -91,5 +91,23 @@ sudo su - zato
 
  # riak http
  config.vm.network "forwarded_port", guest: 8098, host: 8098
+
+ ```
+
+ Sync folderlarinizi ornek olarak asgidaki gibi ayarlayabilirsiniz.
+
+ ```bash
+
+ # ulakbus
+ config.vm.synced_folder "~/dev/zetaops/ulakbus", "/app/ulakbus", owner: "ulakbus", group: "ulakbus"
+
+ # zengine
+ config.vm.synced_folder "~/dev/zetaops/zengine", "/app/zengine", owner: "ulakbus", group: "ulakbus"
+
+ # ulakbus-pyoko
+ config.vm.synced_folder "~/dev/zetaops/pyoko", "/app/pyoko", owner: "ulakbus", group: "ulakbus"
+
+ # ulakbus-ui
+ config.vm.synced_folder "~/dev/zetaops/ulakbus-ui", "/app/ulakbus-ui", owner: "ulakbus", group: "ulakbus"
 
  ```

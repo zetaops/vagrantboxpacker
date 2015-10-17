@@ -1,96 +1,113 @@
-Online Build
-============
+Ulakbus Gelistirme Ortami Makinesi
+==========================
 
-Create User
-https://atlas.hashicorp.com/
+#### Ulakbus ile gelistirme icin gerekli araclari icermektedir. ####
 
-Download Packer
-https://packer.io/downloads.html
+- Ulakbus
+- Zengine
+- Pyoko
+- Riak
+- Zato
 
-Type ``` vagrant login ``` on terminal and enter your atlas.hashicorp information to get access.
+Vagrant makinesine ilk baglandiginizda, "vagrant" kullanicisi ile baglanmis olucaksiniz.
 
-Now clone this repo
+vagrant kullanicisinin sifresi : "vagrant" 'tir (tirnaklar olmadan).
 
+Ulakbus, Zengine ve Pyoko kutuphaneleri, "ulakbus" kullanicisi altindadir.Ulakbus kullanicisina, asagidaki komut ile gecis yapiniz.
+
+```bash
+sudo su - ulakbus
 ```
-git clone https://github.com/zetaops/vagrantboxpacker.git
-cd vagrantboxpacker
-```
-Change user name(mine is zetaops) in template.json with yours.
-```
-"push": {
-     "name": "zetaops",
-     "vcs": true
-   },
+Not: ulakbus kullanicisinin sudo hakki vardir.
 
+Ulakbus kullanicisina giris yaptiginizda; sizi Ulakbus, Zengine, Pyoko kutuphaneleri ve ulakbusenv, pyokoenv, zengineenv adlarinda 3 tanede python virtual environmentini goruceksiniz.
+Gelistirmenizi bu python virtualenvlari uzerinden yapicaksiniz.
 
-```
-After that login atlas.hashicorp website and press Builds.
+Ornek olarak ulakbusenv'ini kullanarak ulakbus ile gelistirme yapmak icin ulakbusenv aktiflestirmeniz gerek.Asagidaki komut ile virtual environmenti aktiflestirin.
 
-Answer questions, generate tokens and verify tokens and paste them into your terminal.
-
-Give a name your build and push.
-
-```
-packer push -name cemg/example2 template.json
-
+```bash
+source ~/ulakbusenv/bin/activate
 ```
 
-###Important ###
-At every box build, change your version number, which is at the bottom of ``` template.json ``` file.
+Zengine ve Pyoko kutuphaneleri ile gelistirme yapmak icinde sirasiyla asagidaki komutlari kullanabilirsiniz.
 
-Local Build
-===========
-
-Create User
-https://atlas.hashicorp.com/
-
-Download Packer
-https://packer.io/downloads.html
-
-Now clone this repo
-
-```
-git clone https://github.com/zetaops/vagrantboxpacker.git
-cd vagrantboxpacker
+```bash
+source ~/zengineenv/bin/activate
+source ~/pyokoenv/bin/activate
 ```
 
-Now build box
+#### Riak ####
+Riak jvm memory icin ayrilan bellek 256 MB'tir. Ihtiyaclariniza gore daha fazla arttirmak icin riak.conf , ayar dosyasini acin.
 
+```bash
+sudo vim /etc/riak/riak.conf
 ```
-packer build template.json
-
+Asagidaki satiri;
+```bash
+search.solr.jvm_options = -d64 -Xms256m -Xmx256m -XX:+UseStringCache -XX:+UseCompressedOops
 ```
+alttaki ile degistirin.Bu Riak jvm memory'i icin kullanilan bellegi 512 MB'ta yukseltecektir.
 
-After a long wait your box will be ready.
-
-Now add it vagrant list and give a name to your box
-
-```
-vagrant box add created_box_name --name mybox
-
-```
-
-To see your box in list
-
-```
-vagrant list
-
+```bash
+search.solr.jvm_options = -d64 -Xms512m -Xmx512m -XX:+UseStringCache -XX:+UseCompressedOops
 ```
 
-Now
+#### Zato ####
 
+Zato kullanimi icin, zato kullanicisina gecmeniz gerek.
+
+```bash
+sudo su - zato
 ```
 
-mkdir mybox
-cd mybox
-vagrant init
-```
+- Zato Web Admin sifresi : ulakbus 'tur.
 
-Change ```config.vm.box = "base"``` with ```config.vm.box = "mybox"``` in Vagrantfile and it's done.
+- Zato icin 1 zato server olusturulmustur.
 
-```
+- Gelistirme ortamina baglandiginizda, zato componentleri otomatik olarak baslatilmistir.
+ - Zato kullanicisindayken zato componentlerini baslat, durdurmak veya yeniden baslatmak isterseniz, ulakbus klasoru icindeki zato-qs-restart.sh, zato-qs-start.sh, zato-qs-stop.sh scriptlerini kullaniniz.Ornek olarak yeniden baslatmak isterseniz,
+   ```bash
+   ./ulakbus/zato-qs-restart.sh
+   ```
+ - Root kullanicisi ile de yeniden baslatip, durdurup, baslatabilirsiniz.
 
-vagrant up
-vagrant ssh
+   ```bash
+  service zato status
+  service zato start
+  service zato stop
+  service zato restart
+   ```
 
-```
+ #### Ek Bilgiler ####
+
+ Kendi bilgisayarinizdan ulakbus uygulamasina, zato web admini ve riak httpye baglanmak icin asagidaki satirlari Vagrantfile 'a ekleyiniz.
+
+ ```bash
+ #ulakbus app
+ config.vm.network "forwarded_port", guest: 9001, host: 9001
+
+ # zato web admin
+ config.vm.network "forwarded_port", guest: 8183, host: 8183
+
+ # riak http
+ config.vm.network "forwarded_port", guest: 8098, host: 8098
+
+ ```
+
+ Sync folderlarinizi ornek olarak asgidaki gibi ayarlayabilirsiniz.
+
+ ```bash
+
+ # ulakbus
+ config.vm.synced_folder "~/dev/zetaops/ulakbus", "/app/ulakbus", owner: "ulakbus", group: "ulakbus"
+
+ # zengine
+ config.vm.synced_folder "~/dev/zetaops/zengine", "/app/zengine", owner: "ulakbus", group: "ulakbus"
+
+ # ulakbus-pyoko
+ config.vm.synced_folder "~/dev/zetaops/pyoko", "/app/pyoko", owner: "ulakbus", group: "ulakbus"
+
+ # ulakbus-ui
+ config.vm.synced_folder "~/dev/zetaops/ulakbus-ui", "/app/ulakbus-ui", owner: "ulakbus", group: "ulakbus"
+
+ ```

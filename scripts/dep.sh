@@ -62,8 +62,6 @@ cat ~/zato_environment_variables >> ~/.profile
 source ~/.profile
 
 mkdir ~/ulakbus;
-/usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
-chown ulakbus:ulakbus /app -Rf
 
 # Create a new zato project named ulakbus
 zato quickstart create ~/ulakbus sqlite localhost 6379 --kvdb_password='' --servers 1 --verbose;
@@ -81,6 +79,8 @@ zato from-config ~/ulakbus/zatopw.conf
 apt-get install -y virtualenvwrapper
 
 mkdir /app
+/usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
+chown ulakbus:ulakbus /app -Rf
 
 #Add ulakbus user to sudoers
 adduser ulakbus sudo

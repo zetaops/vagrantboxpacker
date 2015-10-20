@@ -112,7 +112,6 @@ git clone https://github.com/zetaops/zengine.git
 # clone ulakbus from github
 git clone https://github.com/zetaops/ulakbus.git
 
-
 #activate ulakbusenv
 source ~/ulakbusenv/bin/activate
 
@@ -121,6 +120,14 @@ pip install ipython
 
 cd ~/ulakbus
 pip install -r requirements.txt
+
+pip uninstall Pyoko		
+pip uninstall pyoko		
+pip uninstall zengine		
+		
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*		
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*		
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*		
 
 deactivate
 

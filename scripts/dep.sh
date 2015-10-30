@@ -9,7 +9,7 @@ apt-get -y install apt-file
 apt-file update
 apt-get -y install software-properties-common
 
-apt-get -y install vim htop multitail sysstat nmap tcpdump python-dev
+apt-get -y install xterm vim htop multitail sysstat nmap tcpdump python-dev
 
 apt-get -y update
 apt-get -y upgrade

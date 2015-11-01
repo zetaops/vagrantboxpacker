@@ -57,7 +57,7 @@ apt-get install -y zato
 
 sudo su - zato sh -c "
 
-wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/zato_environment_variables
+wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/zato_environment_variables
 cat ~/zato_environment_variables >> ~/.profile
 source ~/.profile
 
@@ -88,20 +88,25 @@ adduser ulakbus sudo
 sudo su - ulakbus sh -c "
 cd ~
 
+#environment variables specific to all libs
+mkdir env-vars
+cd env-vars
+wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/ulakbus_postactivate
+wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/pyoko_postactivate
+wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/zengine_postactivate
+
+cd ~
 #ulakbus virtualenv
 virtualenv --no-site-packages ulakbusenv
-wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/ulakbus_postactivate
-cat ~/ulakbus_postactivate >> ~/ulakbusenv/bin/activate
+cat ~/env-vars/ulakbus_postactivate >> ~/ulakbusenv/bin/activate
 
 #pyoko virtualenv
 virtualenv --no-site-packages pyokoenv
-wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/pyoko_postactivate
-cat ~/pyoko_postactivate >> ~/pyokoenv/bin/activate
+cat ~/env-vars/pyoko_postactivate >> ~/pyokoenv/bin/activate
 
 #zengine virtualenv
 virtualenv --no-site-packages zengineenv
-wget https://raw.githubusercontent.com/dyrnade/vagrantboxpacker/backup/scripts/env-vars/zengine_postactivate
-cat ~/zengine_postactivate >> ~/zengineenv/bin/activate
+cat ~/env-vars/zengine_postactivate >> ~/zengineenv/bin/activate
 
 # clone pyoko from github
 git clone https://github.com/zetaops/pyoko.git

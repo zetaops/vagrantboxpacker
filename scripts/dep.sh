@@ -46,6 +46,8 @@ service riak restart
 apt-get install -y libssl-dev
 apt-get install -y libffi-dev
 
+#python-lxml requirements
+apt-get install libxml2-dev libxslt-dev python-dev
 
 apt-get install -y redis-server
 
@@ -117,6 +119,9 @@ git clone https://github.com/zetaops/zengine.git
 # clone ulakbus from github
 git clone https://github.com/zetaops/ulakbus.git
 
+# clone faker from github
+git clone https://github.com/zetaops/faker.git
+
 #activate ulakbusenv
 source ~/ulakbusenv/bin/activate
 
@@ -169,6 +174,7 @@ ln -s ~/pyoko/pyoko ~/ulakbusenv/lib/python2.7/site-packages
 ln -s ~/ulakbus/ulakbus ~/ulakbusenv/lib/python2.7/site-packages
 ln -s ~/zengine/zengine ~/ulakbusenv/lib/python2.7/site-packages
 ln -s ~/ulakbus/tests ~/ulakbusenv/lib/python2.7/site-packages
+ln -s ~/faker/faker ~/ulakbusenv/lib/python2.7/site-packages
 
 # Necessary to use riak from zato user
 touch ~/ulakbusenv/lib/python2.7/site-packages/google/__init__.py

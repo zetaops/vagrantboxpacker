@@ -218,7 +218,6 @@ ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
 # Start zato service
 service zato start
 
-
 riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
 riak-admin bucket-type create zengine_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
 riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
@@ -228,5 +227,12 @@ riak-admin bucket-type activate pyoko_models
 riak-admin bucket-type activate zengine_models
 riak-admin bucket-type activate models
 riak-admin bucket-type activate catalog
+
+sudo su
+su ulakbus
+cd ~
+source ~/ulakbusenv/bin/activate
+pyhon ~/ulakbus/ulakbus/manage.py migrate --model all
+pyhon ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
 
 rm -rf /var/lib/apt/lists/*

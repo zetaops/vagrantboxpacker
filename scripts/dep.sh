@@ -232,8 +232,8 @@ sudo su
 su ulakbus
 cd ~
 source ~/ulakbusenv/bin/activate
-pyhon ~/ulakbus/ulakbus/manage.py migrate --model all
-pyhon ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
+python ~/ulakbus/ulakbus/manage.py migrate --model all
+python ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
 
 deactivate
 

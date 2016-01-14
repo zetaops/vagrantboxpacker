@@ -48,6 +48,8 @@ service riak restart
 apt-get install -y libssl-dev
 apt-get install -y libffi-dev
 
+# python-lxml requirements
+apt-get install libxml2-dev libxslt-dev python-dev
 
 apt-get install -y redis-server
 
@@ -119,6 +121,9 @@ git clone https://github.com/zetaops/zengine.git
 # clone ulakbus from github
 git clone https://github.com/zetaops/ulakbus.git
 
+# clone faker from github
+git clone https://github.com/zetaops/faker.git
+
 #activate ulakbusenv
 source ~/ulakbusenv/bin/activate
 
@@ -171,6 +176,7 @@ ln -s ~/pyoko/pyoko ~/ulakbusenv/lib/python2.7/site-packages
 ln -s ~/ulakbus/ulakbus ~/ulakbusenv/lib/python2.7/site-packages
 ln -s ~/zengine/zengine ~/ulakbusenv/lib/python2.7/site-packages
 ln -s ~/ulakbus/tests ~/ulakbusenv/lib/python2.7/site-packages
+ln -s ~/faker/faker ~/ulakbusenv/lib/python2.7/site-packages
 
 # Necessary to use riak from zato user
 touch ~/ulakbusenv/lib/python2.7/site-packages/google/__init__.py
@@ -218,10 +224,19 @@ service zato start
 riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
 riak-admin bucket-type create zengine_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
 riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
+riak-admin bucket-type create catalog '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val": 1}}'
 
 riak-admin bucket-type activate pyoko_models
 riak-admin bucket-type activate zengine_models
 riak-admin bucket-type activate models
+riak-admin bucket-type activate catalog
 
+sudo su - ulakbus sh -c "
+cd ~
+source ~/ulakbusenv/bin/activate
+python ~/ulakbus/ulakbus/manage.py migrate --model all
+python ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
+deactivate
+"
 
 rm -rf /var/lib/apt/lists/*

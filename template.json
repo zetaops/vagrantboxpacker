@@ -39,7 +39,7 @@
                 "artifact_type": "vagrant.box", 
                 "metadata": {
                     "provider": "virtualbox", 
-                    "version": "0.2.6"
+                    "version": "0.2.7"
                 }, 
                 "only": [
                     "virtualbox-iso"

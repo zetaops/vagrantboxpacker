@@ -14,7 +14,10 @@ apt-get -y install xterm vim htop multitail sysstat nmap tcpdump python-dev
 apt-get -y install apt-file
 apt-file update
 apt-get -y install software-properties-common
-apt-get -y install libpam0g-dev
+
+apt-get -y update && apt-get -y upgrade
+
+apt-get -y install libpam0g-dev libjpeg8-dev
 apt-get -y install libssl-dev libffi-dev
 # python-lxml requirements
 apt-get install libxml2-dev libxslt-dev python-dev
@@ -54,6 +57,8 @@ sed -i "s/anti_entropy = active/anti_entropy = passive/" /etc/riak/riak.conf
 sed -i "s/storage_backend = bitcask/storage_backend = multi/" /etc/riak/riak.conf
 sed -i "s/search.solr.start_timeout = 30s/search.solr.start_timeout = 120s/" /etc/riak/riak.conf
 sed -i "s/leveldb.maximum_memory.percent = 70/leveldb.maximum_memory.percent = 30/" /etc/riak/riak.conf
+sed -i "s/listener.http.internal = 127.0.0.1:8098/listener.http.internal = 0.0.0.0:8098/" /etc/riak/riak.conf
+sed -i "s/listener.protobuf.internal = 0.0.0.0:8087/listener.protobuf.internal = 0.0.0.0:8087/" /etc/riak/riak.conf
 
 echo "multi_backend.bitcask_mult.storage_backend = bitcask
 multi_backend.bitcask_mult.bitcask.data_root = /var/lib/riak/bitcask_mult
@@ -68,7 +73,7 @@ search.solr.jvm_options = -d64 -Xms512m -Xmx512m -XX:+UseStringCache -XX:+UseCom
 
 # Redis Installation
 apt-get install -y redis-server
-
+sed -i "s/bind 127.0.0.1/bind 0.0.0.0/" /etc/redis/redis.conf
 
 # Zato Installation
 curl -s https://zato.io/repo/zato-0CBD7F72.pgp.asc | sudo apt-key add -

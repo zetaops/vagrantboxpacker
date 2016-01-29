@@ -221,17 +221,18 @@ ln -s /app/pyoko/pyoko                                                 /opt/zato
 ln -s /app/zengine/zengine                                             /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbus/ulakbus                                             /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/riak                 /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/riak_pb              /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/redis                /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/SpiffWorkflow        /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/werkzeug             /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/lazy_object_proxy    /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/falcon               /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/beaker               /opt/zato/2.*.*/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/beaker_extensions    /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/passlib              /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/google               /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/enum                 /opt/zato/2.*.*/zato_extra_paths/
 ln -s /app/ulakbusenv/lib/python2.7/site-packages/celery               /opt/zato/2.*.*/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/funcsigs             /opt/zato/2.*.*/zato_extra_paths/
 "
 
 # Create symbolic links for zato project to start them at login

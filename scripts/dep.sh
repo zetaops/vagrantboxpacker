@@ -153,7 +153,9 @@ pip install --upgrade pip
 pip install ipython
 
 cd ~/ulakbus
-pip install -r requirements.txt
+pip install -r requirements/requirements.txt
+
+
 
 pip uninstall Pyoko		
 pip uninstall pyoko		
@@ -173,7 +175,7 @@ pip install --upgrade pip
 pip install ipython
 
 cd ~/pyoko
-pip install -r requirements.txt
+pip install -r requirements/default.txt
 
 deactivate
 
@@ -185,7 +187,7 @@ pip install --upgrade pip
 pip install ipython
 
 cd ~/zengine
-pip install -r requirements.txt
+pip install -r requirements/default.txt
 
 pip uninstall Pyoko
 

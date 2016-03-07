@@ -4,8 +4,19 @@
 #
 #
 
+# Rabbitmq Adding Repository
+echo "deb http://www.rabbitmq.com/debian/ stable main" >> /etc/apt/sources.list.d/rabbit_mq.list
+wget https://www.rabbitmq.com/rabbitmq-signing-key-public.asc
+sudo apt-key add rabbitmq-signing-key-public.asc
+
 # update package infos and upgrade all currently installed
 apt-get -y update && apt-get -y upgrade
+
+# Rabbitmq Server Installation
+sudo apt-get install rabbitmq-server
+
+# Tornado Installation
+pip install tornado
 
 # install basic tools
 apt-get -y install curl git apt-transport-https wget

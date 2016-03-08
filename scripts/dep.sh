@@ -15,9 +15,6 @@ apt-get -y update && apt-get -y upgrade
 # Rabbitmq Server Installation
 sudo apt-get install rabbitmq-server
 
-# Tornado Installation
-pip install tornado
-
 # install basic tools
 apt-get -y install curl git apt-transport-https wget
 apt-get -y install xterm vim htop multitail sysstat nmap tcpdump python-dev

@@ -11,11 +11,11 @@ Lütfen [bağlantıdaki](http://www.ulakbus.org/wiki/development_environment_set
 
 ### Sanal Makine Nasıl Güncellenir? ###
 
-  ### Kullanıcılar İçin Güncelleme ###
+### Kullanıcılar İçin Güncelleme ###
 
  Lütfen [bağlantıdaki](http://www.ulakbus.org/wiki/development_environment_setup.html) belgeyi inceleyiniz.
 
-  ### Geliştiriciler İçin Güncelleme ###
+### Geliştiriciler İçin Güncelleme ###
 
   İşlemlere başlamadan önce [buradaki](https://github.com/zetaops/ulakbus-development-box) adresten dosyaları klonlayınız.
 

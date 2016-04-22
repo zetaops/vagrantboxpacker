@@ -112,4 +112,18 @@ sudo su - zato
  # ulakbus-ui
  config.vm.synced_folder "~/dev/zetaops/ulakbus-ui", "/app/ulakbus-ui", owner: "ulakbus", group: "ulakbus"
 
- ```
+```
+
+###VAGRANT VERSIYONLAMA###
+
+https://github.com/zetaops/ulakbus-development-box  linkinden klonlayin. Icinde bulunan template.json file'ini "post-processors" bolumu altindaki
+"version" satirini degistirin. "version": "0.2.8" gibi.
+#bu islemin yapilabilmesi icin version numarasi bir onceki islemle ayni olmamali.
+
+### Box'un Atlas Hashicorp'a Yuklenmesi###
+
+Version satirini degistirdikten sonra, Atlas Hashicorp'ta da guncellemek icin asagidaki adresten token aliniz.
+https://atlas.hashicorp.com/settings/tokens
+
+Konsol'dan "vagrant login"
+

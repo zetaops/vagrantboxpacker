@@ -4,8 +4,19 @@
 #
 #
 
+# Rabbitmq Adding Repository
+echo 'deb http://www.rabbitmq.com/debian/ testing main' |
+        sudo tee /etc/apt/sources.list.d/rabbitmq.list
+
+wget -O- https://www.rabbitmq.com/rabbitmq-signing-key-public.asc |
+        sudo apt-key add -
+
+
 # update package infos and upgrade all currently installed
 apt-get -y update && apt-get -y upgrade
+
+# Rabbitmq Server Installation
+sudo apt-get install rabbitmq-server
 
 # install basic tools
 apt-get -y install curl git apt-transport-https wget
@@ -20,7 +31,7 @@ apt-get -y update && apt-get -y upgrade
 apt-get -y install libpam0g-dev libjpeg8-dev
 apt-get -y install libssl-dev libffi-dev
 # python-lxml requirements
-apt-get install libxml2-dev libxslt-dev python-dev
+apt-get install python-dev
 
 # set python default encoding utf-8
 sed -i "1s/^/import sys \nsys.setdefaultencoding('utf-8') \n /" /usr/lib/python2.7/sitecustomize.py
@@ -189,7 +200,7 @@ pip install ipython
 cd ~/zengine
 pip install -r requirements/default.txt
 
-pip uninstall Pyoko
+pip uninstall --y Pyoko
 
 rm -rf ~/zengineenv/lib/python2.7/site-packages/Pyoko*
 

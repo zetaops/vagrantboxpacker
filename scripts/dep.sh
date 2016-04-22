@@ -157,9 +157,9 @@ pip install -r requirements/requirements.txt
 
 
 
-pip uninstall Pyoko		
-pip uninstall pyoko		
-pip uninstall zengine		
+pip uninstall --y Pyoko		
+pip uninstall --y pyoko		
+pip uninstall --y zengine		
 		
 rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*		
 rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*		

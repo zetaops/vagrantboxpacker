@@ -1,129 +1,56 @@
-Ulakbus Gelistirme Ortami Makinesi
+Ulakbüs Geliştirme Ortamı Makinesi
 ==========================
 
-#### Ulakbus ile gelistirme icin gerekli araclari icermektedir. ####
+### Sanal Makinede Bulunan Uygulamalar ###
 
-- Ulakbus
-- Zengine
-- Pyoko
-- Riak
-- Zato
+Lütfen [bağlantıdaki](http://www.ulakbus.org/wiki/development_environment_setup.html) belgeyi inceleyiniz.
 
-Vagrant makinesine ilk baglandiginizda, "vagrant" kullanicisi ile baglanmis olucaksiniz.
+### Sanal Makine Kullanımı Nasıl? ###
 
-vagrant kullanicisinin sifresi : "vagrant" 'tir (tirnaklar olmadan).
+Lütfen [bağlantıdaki](http://www.ulakbus.org/wiki/development_environment_setup.html) belgeyi inceleyiniz.
 
-Ulakbus, Zengine ve Pyoko kutuphaneleri, "ulakbus" kullanicisi altindadir.Ulakbus kullanicisina, asagidaki komut ile gecis yapiniz.
+### Sanal Makine Nasıl Güncellenir? ###
 
-```bash
-sudo su - ulakbus
-```
-Not: ulakbus kullanicisinin sudo hakki vardir.
+  ### Kullanıcılar İçin Güncelleme ###
 
-Ulakbus kullanicisina giris yaptiginizda; sizi Ulakbus, Zengine, Pyoko kutuphaneleri ve ulakbusenv, pyokoenv, zengineenv adlarinda 3 tanede python virtual environmentini goruceksiniz.
-Gelistirmenizi bu python virtualenvlari uzerinden yapicaksiniz.
+ Lütfen [bağlantıdaki](http://www.ulakbus.org/wiki/development_environment_setup.html) belgeyi inceleyiniz.
 
-Ornek olarak ulakbusenv'ini kullanarak ulakbus ile gelistirme yapmak icin ulakbusenv aktiflestirmeniz gerek.Asagidaki komut ile virtual environmenti aktiflestirin.
+  ### Geliştiriciler İçin Güncelleme ###
 
-```bash
-source ~/ulakbusenv/bin/activate
-```
+  İşlemlere başlamadan önce [buradaki](https://github.com/zetaops/ulakbus-development-box) adresten dosyaları klonlayınız.
 
-Zengine ve Pyoko kutuphaneleri ile gelistirme yapmak icinde sirasiyla asagidaki komutlari kullanabilirsiniz.
 
-```bash
-source ~/zengineenv/bin/activate
-source ~/pyokoenv/bin/activate
-```
+  - ### Uygulamaların Güncellenmesi ve Yüklenmesi ###
 
-#### Riak ####
-Riak jvm memory icin ayrilan bellek 256 MB'tir. Ihtiyaclariniza gore daha fazla arttirmak icin riak.conf , ayar dosyasini acin.
+  Yeni güncellemede eklemek ya da çıkarmak istediğiniz uygulamaları "scripts" klasörü altındaki "dep.sh" dosyasının içerisine yazınız. Versiyon güncellenirken bu değişiklikler göz önüne alınacaktır. Virtualenv içine kurulacak olan paketler, ilgili uygulamanın git deposundaki requirements.txt dosyasının içinden okunurlar, kurmaya çalışmayınız.
 
-```bash
-sudo vim /etc/riak/riak.conf
-```
-Asagidaki satiri;
-```bash
-search.solr.jvm_options = -d64 -Xms256m -Xmx256m -XX:+UseStringCache -XX:+UseCompressedOops
-```
-alttaki ile degistirin.Bu Riak jvm memory'i icin kullanilan bellegi 512 MB'ta yukseltecektir.
+  - ### Versiyon Numarası Güncelleme ###
 
-```bash
-search.solr.jvm_options = -d64 -Xms512m -Xmx512m -XX:+UseStringCache -XX:+UseCompressedOops
-```
+   Klonlanan klasörün içerisinde bulunan template.json dosyasında "post-processors" bölümü altındaki "version" satırını değiştiriniz.
 
-#### Zato ####
+  ```bash
+   "version": "0.2.8"
+  ```
 
-Zato kullanimi icin, zato kullanicisina gecmeniz gerek.
+  - ### Box'un Atlas Hashicorp'a Yüklenmesi ###
 
-```bash
-sudo su - zato
-```
+  **Bu işlemin yapılabilmesi için versiyon numarası bir önceki versiyon numarasıyla farklı olmalıdır.**
 
-- Zato Web Admin sifresi : ulakbus 'tur.
+  Gereken uygulamalar: Packer ([bu adresten](https://www.packer.io/downloads.html) indirebilirsiniz.)
 
-- Zato icin 1 zato server olusturulmustur.
+ Atlas Hashicorp'ta box'ı güncellemek icin [bu adresten](https://atlas.hashicorp.com/settings/tokens) "generate token" ile token alınız. Konsolda "export ATLAS_TOKEN=TOKEN" komutuyla size verilen token ile doğrulamayı yapınız. Örnek olarak:
 
-- Gelistirme ortamina baglandiginizda, zato componentleri otomatik olarak baslatilmistir.
- - Zato kullanicisindayken zato componentlerini baslat, durdurmak veya yeniden baslatmak isterseniz, ulakbus klasoru icindeki zato-qs-restart.sh, zato-qs-start.sh, zato-qs-stop.sh scriptlerini kullaniniz.Ornek olarak yeniden baslatmak isterseniz,
+    ```bash
+     export ATLAS_TOKEN=lA1ckHHg.atlasv1.gThadajbankdI49eark1LPHknQ
+    ```
 
-   ```bash
-   ./ulakbus/zato-qs-restart.sh
-   ```
+    Doğrulamayı yaptıktan sonra konsoldan "vagrant login" yazarak Atlas kullanıcı adı ve şifrenizi giriniz.
 
- - Root kullanicisi ile de yeniden baslatip, durdurup, baslatabilirsiniz.
+    ```bash
+     vagrant login
+    ```
+    Ardından "packer push" komutu ile güncel boxınızı Atlas Hashicorp'a yükleyebilirsiniz.
 
-   ```bash
-   service zato status
-   service zato start
-   service zato stop
-   service zato restart
-   ```
-
- #### Ek Bilgiler ####
-
- Kendi bilgisayarinizdan ulakbus uygulamasina, zato web admini ve riak httpye baglanmak icin asagidaki satirlari Vagrantfile 'a ekleyiniz.
-
- ```bash
- #ulakbus app
- config.vm.network "forwarded_port", guest: 9001, host: 9001
-
- # zato web admin
- config.vm.network "forwarded_port", guest: 8183, host: 8183
-
- # riak http
- config.vm.network "forwarded_port", guest: 8098, host: 8098
-
- ```
-
- Sync folderlarinizi ornek olarak asgidaki gibi ayarlayabilirsiniz.
-
- ```bash
-
- # ulakbus
- config.vm.synced_folder "~/dev/zetaops/ulakbus", "/app/ulakbus", owner: "ulakbus", group: "ulakbus"
-
- # zengine
- config.vm.synced_folder "~/dev/zetaops/zengine", "/app/zengine", owner: "ulakbus", group: "ulakbus"
-
- # ulakbus-pyoko
- config.vm.synced_folder "~/dev/zetaops/pyoko", "/app/pyoko", owner: "ulakbus", group: "ulakbus"
-
- # ulakbus-ui
- config.vm.synced_folder "~/dev/zetaops/ulakbus-ui", "/app/ulakbus-ui", owner: "ulakbus", group: "ulakbus"
-
-```
-
-###VAGRANT VERSIYONLAMA###
-
-https://github.com/zetaops/ulakbus-development-box  linkinden klonlayin. Icinde bulunan template.json file'ini "post-processors" bolumu altindaki
-"version" satirini degistirin. "version": "0.2.8" gibi.
-#bu islemin yapilabilmesi icin version numarasi bir onceki islemle ayni olmamali.
-
-### Box'un Atlas Hashicorp'a Yuklenmesi###
-
-Version satirini degistirdikten sonra, Atlas Hashicorp'ta da guncellemek icin asagidaki adresten token aliniz.
-https://atlas.hashicorp.com/settings/tokens
-
-Konsol'dan "vagrant login"
-
+    ```bash
+      packer push -name zetaops/ulakbus template.json
+    ```

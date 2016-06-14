@@ -11,12 +11,13 @@ echo 'deb http://www.rabbitmq.com/debian/ testing main' |
 wget -O- https://www.rabbitmq.com/rabbitmq-signing-key-public.asc |
         sudo apt-key add -
 
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886
 
 # update package infos and upgrade all currently installed
 apt-get -y update && apt-get -y upgrade
 
 # Rabbitmq Server Installation
-sudo apt-get install rabbitmq-server
+sudo apt-get -y install rabbitmq-server
 
 # install basic tools
 apt-get -y install curl git apt-transport-https wget
@@ -31,7 +32,7 @@ apt-get -y update && apt-get -y upgrade
 apt-get -y install libpam0g-dev libjpeg8-dev
 apt-get -y install libssl-dev libffi-dev
 # python-lxml requirements
-apt-get install python-dev
+apt-get -y install python-dev
 
 # set python default encoding utf-8
 sed -i "1s/^/import sys \nsys.setdefaultencoding('utf-8') \n /" /usr/lib/python2.7/sitecustomize.py

@@ -35,10 +35,11 @@ apt-get -y install software-properties-common
 
 apt-get -y update && apt-get -y upgrade
 
+# python-lxml requirements
 apt-get -y install libpam0g-dev libjpeg8-dev
 apt-get -y install libssl-dev libffi-dev
-# python-lxml requirements
 apt-get -y install python-dev
+apt-get -y install python-lxml
 
 # set python default encoding utf-8
 sed -i "1s/^/import sys \nsys.setdefaultencoding('utf-8') \n /" /usr/lib/python2.7/sitecustomize.py
@@ -281,6 +282,7 @@ riak-admin bucket-type activate catalog
 sudo su - ulakbus sh -c "
 cd ~
 source ~/ulakbusenv/bin/activate
+pip install lxml
 python ~/ulakbus/ulakbus/manage.py migrate --model all
 python ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
 deactivate

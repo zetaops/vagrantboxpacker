@@ -4,6 +4,11 @@
 #
 #
 
+dd if=/dev/zero of=/swapfile bs=1024 count=524288
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+
 # Rabbitmq Adding Repository
 echo 'deb http://www.rabbitmq.com/debian/ testing main' |
         sudo tee /etc/apt/sources.list.d/rabbitmq.list
@@ -12,6 +17,7 @@ wget -O- https://www.rabbitmq.com/rabbitmq-signing-key-public.asc |
         sudo apt-key add -
 
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys C2518248EEA14886
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B73A36E6026DFCA
 
 # update package infos and upgrade all currently installed
 apt-get -y update && apt-get -y upgrade

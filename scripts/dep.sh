@@ -23,7 +23,8 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 6B73A36E6026DFCA
 apt-get -y update && apt-get -y upgrade
 
 # Rabbitmq Server Installation
-sudo apt-get -y install rabbitmq-server
+apt-get -y install rabbitmq-server
+apt-get -y install libxml2-dev libxslt1-dev python-dev
 
 # install basic tools
 apt-get -y install curl git apt-transport-https wget

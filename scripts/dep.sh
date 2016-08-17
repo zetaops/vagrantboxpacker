@@ -60,13 +60,13 @@ update-grub
 
 
 # java install for solr
-apt-add-repository ppa:webupd8team/java -y && apt-get update
+apt-add-repository ppa:webupd8team/java -y && apt-get -y update
 echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 apt-get install -y oracle-java8-installer
 
 # zetaops riak package
 curl -s https://packagecloud.io/install/repositories/zetaops/riak/script.deb.sh |sudo bash
-apt-get install riak=2.1.1-1
+apt-get install -y riak=2.1.1-1
 
 # service stop and wait
 service riak stop
@@ -97,8 +97,8 @@ sed -i "s/bind 127.0.0.1/bind 0.0.0.0/" /etc/redis/redis.conf
 
 # Zato Installation
 curl -s https://zato.io/repo/zato-0CBD7F72.pgp.asc | sudo apt-key add -
-apt-add-repository https://zato.io/repo/stable/2.0/ubuntu
-apt-get update
+apt-add-repository https://zato.io/repo/stable/2.0/ubuntu -y
+apt-get -y update
 apt-get install -y zato
 
 sudo su - zato sh -c "
@@ -177,13 +177,13 @@ pip install -r requirements/requirements.txt
 
 
 
-pip uninstall --y Pyoko		
-pip uninstall --y pyoko		
-pip uninstall --y zengine		
-		
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*		
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*		
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*		
+pip uninstall --y Pyoko
+pip uninstall --y pyoko
+pip uninstall --y zengine
+
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*
+rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*
 
 deactivate
 

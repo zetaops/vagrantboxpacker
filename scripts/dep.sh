@@ -55,7 +55,7 @@ apt-get install -y oracle-java8-installer
 ===================================== # Riak Installation and Configuration BEGIN ======================================
 # riak package
 curl -s https://packagecloud.io/install/repositories/basho/riak/script.deb.sh | sudo bash
-apt-get install -y riak=2.1.1-1
+apt-get install -y riak
 
 # service stop and wait
 service riak stop
@@ -146,6 +146,31 @@ cd ~
 #ulakbus virtualenv
 virtualenv --no-site-packages ulakbusenv
 cat ~/env-vars/ulakbus_postactivate >> ~/ulakbusenv/bin/activate
+
+echo "
+
+# ulakbus-env variables
+export ZENGINE_SETTINGS=ulakbus.settings
+export LC_CTYPE=en_US.UTF-8
+export RIAK_PORT=8098
+export REDIS_SERVER=127.0.0.1:6379
+export RIAK_SERVER=127.0.0.1
+export RIAK_PROTOCOL=http
+export PYOKO_SETTINGS=ulakbus.settings
+export PYTHONUNBUFFERED=1
+export DEFAULT_BUCKET_TYPE='models'
+export LOG_HANDLER='file'
+export LOG_FILE='/app/logs/ulakbus.log'
+export DEBUG=1
+export DEBUG_LEVEL=11
+export MQ_VHOST=ulakbus
+export MQ_PASS=123
+export MQ_USER=ulakbus
+
+" >> ~/ulakbusenv/bin/activate
+
+# necessary for LOG_FILE env-var
+mkdir /app/logs/
 
 #pyoko virtualenv
 virtualenv --no-site-packages pyokoenv
@@ -293,7 +318,10 @@ riak-admin bucket-type activate catalog
 
 # ===================================== # Riak Post Configuration END ====================================================
 
-
+# Rabbitmq Ulakbus Configuration
+rabbitmqctl add_vhost ulakbus
+rabbitmqctl add_user ulakbus 123
+rabbitmqctl set_permissions -p ulakbus ulakbus ".*" ".*" ".*"
 
 # Initial migration of ulakbus models and load fixtures
 sudo su - ulakbus sh -c "
@@ -301,8 +329,8 @@ cd ~
 source ~/ulakbusenv/bin/activate
 pip install lxml
 python ~/ulakbus/ulakbus/manage.py migrate --model all
-python ~/ulakbus/ulakbus/manage.py load_data --path ~/ulakbus/ulakbus/fixtures/base.csv
-python ~/ulakbus/ulakbus/manage.py load_data --path ~/ulakbus/ulakbus/fixtures/
+python ~/ulakbus/ulakbus/manage.py load_data --path ~/ulakbus/tests/fixtures/
+python ~/ulakbus/ulakbus/manage.py load_diagrams
 python ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
 python ~/ulakbus/ulakbus/manage.py preparemq
 deactivate

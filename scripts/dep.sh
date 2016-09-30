@@ -52,7 +52,7 @@ apt-add-repository ppa:webupd8team/java -y && apt-get -y update
 echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 apt-get install -y oracle-java8-installer
 
-===================================== # Riak Installation and Configuration BEGIN ======================================
+# ===================================== # Riak Installation and Configuration BEGIN ======================================
 # riak package
 curl -s https://packagecloud.io/install/repositories/basho/riak/script.deb.sh | sudo bash
 apt-get install -y riak
@@ -87,7 +87,7 @@ multi_backend.leveldb_mult.leveldb.data_root = /var/lib/riak/leveldb_mult
 multi_backend.default = bitcask_mult
 search.solr.jvm_options = -d64 -Xms512m -Xmx512m -XX:+UseStringCache -XX:+UseCompressedOops" >> /etc/riak/riak.conf
 
-===================================== # Riak Installation END ==========================================================
+# ===================================== # Riak Installation END ==========================================================
 
 
 # Redis Installation
@@ -165,9 +165,7 @@ export DEBUG=1
 export DEBUG_LEVEL=11
 export MQ_VHOST=ulakbus
 export MQ_PASS=123
-export MQ_USER=ulakbus
-
-" >> ~/ulakbusenv/bin/activate
+export MQ_USER=ulakbus " >> ~/ulakbusenv/bin/activate
 
 # necessary for LOG_FILE env-var
 mkdir /app/logs/
@@ -268,6 +266,7 @@ ln -s ~/pyoko/pyoko   ~/pyokoenv/lib/python2.7/site-packages
 ln -s ~/pyoko/tests   ~/pyokoenv/lib/python2.7/site-packages
 # end
 "
+
 # Create symbolic links for all dependecies and pyoko, zengine, ulakbus for Zato
 # Since zato installations based on version numbers, I used wildcards while creating symbolic links
 #

@@ -4,10 +4,12 @@
 #
 #
 
+# Required for build of lxml
 dd if=/dev/zero of=/swapfile bs=1024 count=524288
 chmod 600 /swapfile
 mkswap /swapfile
 swapon /swapfile
+
 
 # Rabbitmq Adding Repository
 echo 'deb http://www.rabbitmq.com/debian/ testing main' |
@@ -24,7 +26,6 @@ apt-get -y update && apt-get -y upgrade
 
 # Rabbitmq Server Installation
 apt-get -y install rabbitmq-server
-apt-get -y install libxml2-dev libxslt1-dev python-dev
 
 # install basic tools
 apt-get -y install curl git apt-transport-https wget
@@ -37,7 +38,7 @@ apt-get -y install software-properties-common
 apt-get -y update && apt-get -y upgrade
 
 # python-lxml requirements
-apt-get -y install libpam0g-dev libjpeg8-dev
+apt-get -y install libpam0g-dev libjpeg8-dev libxml2-dev libxslt1-dev
 apt-get -y install libssl-dev libffi-dev
 apt-get -y install python-dev
 apt-get -y install python-lxml
@@ -45,7 +46,20 @@ apt-get -y install python-lxml
 # set python default encoding utf-8
 sed -i "1s/^/import sys \nsys.setdefaultencoding('utf-8') \n /" /usr/lib/python2.7/sitecustomize.py
 
-# Riak Installation
+
+# java install for solr
+apt-add-repository ppa:webupd8team/java -y && apt-get -y update
+echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
+apt-get install -y oracle-java8-installer
+
+===================================== # Riak Installation and Configuration BEGIN ======================================
+# riak package
+curl -s https://packagecloud.io/install/repositories/basho/riak/script.deb.sh | sudo bash
+apt-get install -y riak=2.1.1-1
+
+# service stop and wait
+service riak stop
+sleep 10
 
 # file limits and some recommended tunings
 echo 'ulimit -n 65536' >> /etc/default/riak
@@ -58,20 +72,6 @@ sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="elevator=noop
 sed -i 's/GRUB_CMDLINE_LINUX_DEFAULT="/GRUB_CMDLINE_LINUX_DEFAULT="clocksource=hpet /' /etc/default/grub
 update-grub
 
-
-# java install for solr
-apt-add-repository ppa:webupd8team/java -y && apt-get -y update
-echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
-apt-get install -y oracle-java8-installer
-
-# zetaops riak package
-curl -s https://packagecloud.io/install/repositories/zetaops/riak/script.deb.sh |sudo bash
-apt-get install -y riak=2.1.1-1
-
-# service stop and wait
-service riak stop
-sleep 10
-
 sed -i "s/search = off/search = on/" /etc/riak/riak.conf
 sed -i "s/anti_entropy = active/anti_entropy = passive/" /etc/riak/riak.conf
 sed -i "s/storage_backend = bitcask/storage_backend = multi/" /etc/riak/riak.conf
@@ -82,20 +82,21 @@ sed -i "s/listener.protobuf.internal = 0.0.0.0:8087/listener.protobuf.internal =
 
 echo "multi_backend.bitcask_mult.storage_backend = bitcask
 multi_backend.bitcask_mult.bitcask.data_root = /var/lib/riak/bitcask_mult
-
 multi_backend.leveldb_mult.storage_backend = leveldb
 multi_backend.leveldb_mult.leveldb.data_root = /var/lib/riak/leveldb_mult
-
 multi_backend.default = bitcask_mult
-
 search.solr.jvm_options = -d64 -Xms512m -Xmx512m -XX:+UseStringCache -XX:+UseCompressedOops" >> /etc/riak/riak.conf
+
+===================================== # Riak Installation END ==========================================================
 
 
 # Redis Installation
 apt-get install -y redis-server
 sed -i "s/bind 127.0.0.1/bind 0.0.0.0/" /etc/redis/redis.conf
 
-# Zato Installation
+
+# ===================================== # Zato Installation and Configuration BEGIN ====================================
+
 curl -s https://zato.io/repo/zato-0CBD7F72.pgp.asc | sudo apt-key add -
 apt-add-repository https://zato.io/repo/stable/2.0/ubuntu -y
 apt-get -y update
@@ -166,6 +167,7 @@ git clone https://github.com/zetaops/ulakbus.git
 # clone faker from github
 git clone https://github.com/zetaops/faker.git
 
+# =========== ulakbus BEGIN =========
 #activate ulakbusenv
 source ~/ulakbusenv/bin/activate
 
@@ -173,9 +175,7 @@ pip install --upgrade pip
 pip install ipython
 
 cd ~/ulakbus
-pip install -r requirements/requirements.txt
-
-
+pip install -r requirements/develop.txt
 
 pip uninstall --y Pyoko
 pip uninstall --y pyoko
@@ -186,8 +186,11 @@ rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*
 rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*
 
 deactivate
+# =========== ulakbus END =========
 
 
+
+# =========== pyoko BEGIN =========
 #activate pyokoenv
 source ~/pyokoenv/bin/activate
 
@@ -198,8 +201,11 @@ cd ~/pyoko
 pip install -r requirements/default.txt
 
 deactivate
+# =========== pyoko END =========
 
 
+
+# =========== zengine BEGIN =========
 #activate zengineenv
 source ~/zengineenv/bin/activate
 
@@ -214,6 +220,8 @@ pip uninstall --y Pyoko
 rm -rf ~/zengineenv/lib/python2.7/site-packages/Pyoko*
 
 deactivate
+# =========== zengine END =========
+
 
 # Copy libraries: pyoko, ulakbus, zengine to ulakbusenv
 ln -s ~/pyoko/pyoko      ~/ulakbusenv/lib/python2.7/site-packages
@@ -265,7 +273,11 @@ ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
 
 # Start zato service
 service zato start
+# ===================================== # Zato Installation and Configuration END ======================================
 
+
+
+# ===================================== # Riak Post Configuration BEGIN ================================================
 service riak start
 sleep 30
 
@@ -279,16 +291,24 @@ riak-admin bucket-type activate zengine_models
 riak-admin bucket-type activate models
 riak-admin bucket-type activate catalog
 
+# ===================================== # Riak Post Configuration END ====================================================
+
+
+
 # Initial migration of ulakbus models and load fixtures
 sudo su - ulakbus sh -c "
 cd ~
 source ~/ulakbusenv/bin/activate
 pip install lxml
 python ~/ulakbus/ulakbus/manage.py migrate --model all
+python ~/ulakbus/ulakbus/manage.py load_data --path ~/ulakbus/ulakbus/fixtures/base.csv
+python ~/ulakbus/ulakbus/manage.py load_data --path ~/ulakbus/ulakbus/fixtures/
 python ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
+python ~/ulakbus/ulakbus/manage.py preparemq
 deactivate
 "
 
+# Clean up
 apt-get -y autoremove
 apt-get clean
 rm -rf /var/lib/apt/lists/*

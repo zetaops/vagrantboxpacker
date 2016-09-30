@@ -147,7 +147,7 @@ cd ~
 virtualenv --no-site-packages ulakbusenv
 cat ~/env-vars/ulakbus_postactivate >> ~/ulakbusenv/bin/activate
 
-echo "
+echo '
 
 # ulakbus-env variables
 export ZENGINE_SETTINGS=ulakbus.settings
@@ -165,7 +165,7 @@ export DEBUG=1
 export DEBUG_LEVEL=11
 export MQ_VHOST=ulakbus
 export MQ_PASS=123
-export MQ_USER=ulakbus " >> ~/ulakbusenv/bin/activate
+export MQ_USER=ulakbus ' >> ~/ulakbusenv/bin/activate
 
 # necessary for LOG_FILE env-var
 mkdir /app/logs/
@@ -305,9 +305,9 @@ service zato start
 service riak start
 sleep 30
 
-riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
-riak-admin bucket-type create zengine_models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
-riak-admin bucket-type create models '{"props":{"last_write_wins":true, "allow_mult":false, "n_val":1}}'
+riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val":1}}'
+riak-admin bucket-type create zengine_models '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val":1}}'
+riak-admin bucket-type create models '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val":1}}'
 riak-admin bucket-type create catalog '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val": 1}}'
 
 riak-admin bucket-type activate pyoko_models

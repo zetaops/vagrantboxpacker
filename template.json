@@ -16,7 +16,7 @@
             "guest_os_type": "Ubuntu_64",
             "headless": true,
             "http_directory": "http",
-            "iso_checksum": "07e4bb5569814eab41fafac882ba127893e3ff0bdb7ec931c9b2d040e3e94e7a",
+            "iso_checksum": "dde07d37647a1d2d9247e33f14e91acb10445a97578384896b4e1d985f754cc1",
             "iso_checksum_type": "sha256",
             "iso_url":             "http://releases.ubuntu.com/14.04/ubuntu-14.04.5-server-amd64.iso",
             "shutdown_command": "echo '/sbin/halt -h -p' > shutdown.sh; echo 'vagrant'|sudo -S bash 'shutdown.sh'",

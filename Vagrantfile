@@ -29,6 +29,7 @@ Vagrant.configure(2) do |config|
   config.vm.network "forwarded_port", guest: 8087, host: 8087 # riak protocol buffers
   config.vm.network "forwarded_port", guest: 6379, host: 6379 # redis-server
   config.vm.network "forwarded_port", guest: 8093, host: 8093 # solr web ui
+  config.vm.network "forwarded_port", guest: 5672, host: 5672 # rabbitmq 
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.

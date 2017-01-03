@@ -309,11 +309,14 @@ riak-admin bucket-type create pyoko_models '{"props":{"last_write_wins":true, "d
 riak-admin bucket-type create zengine_models '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val":1}}'
 riak-admin bucket-type create models '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val":1}}'
 riak-admin bucket-type create catalog '{"props":{"last_write_wins":true, "dvv_enabled":false, "allow_mult":false, "n_val": 1}}'
+riak-admin bucket-type create log_version '{"props": {"backend": "leveldb_mult"}}'
+
 
 riak-admin bucket-type activate pyoko_models
 riak-admin bucket-type activate zengine_models
 riak-admin bucket-type activate models
 riak-admin bucket-type activate catalog
+riak-admin bucket-type activate log_version
 
 # ===================================== # Riak Post Configuration END ====================================================
 

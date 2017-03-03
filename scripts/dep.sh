@@ -29,7 +29,7 @@ apt-get -y install rabbitmq-server
 
 # install basic tools
 apt-get -y install curl git apt-transport-https wget
-apt-get -y install xterm vim htop multitail sysstat nmap tcpdump python-dev
+apt-get -y install xterm vim htop multitail sysstat nmap tcpdump
 
 apt-get -y install apt-file
 apt-file update
@@ -37,25 +37,30 @@ apt-get -y install software-properties-common
 
 apt-get -y update && apt-get -y upgrade
 
-# python-lxml requirements
-apt-get -y install libpam0g-dev libjpeg8-dev libxml2-dev libxslt1-dev
+# python, lxml, reportlab requirements
+apt-get -y install libpam0g-dev libjpeg8-dev libpng-dev zlib1g-dev libxml2-dev libxslt1-dev
 apt-get -y install libssl-dev libffi-dev
-apt-get -y install python-dev
-apt-get -y install python-lxml
+apt-get -y install python-dev python-lxml virtualenvwrapper
+
 
 # set python default encoding utf-8
 sed -i "1s/^/import sys \nsys.setdefaultencoding('utf-8') \n /" /usr/lib/python2.7/sitecustomize.py
 
+
+######## Riak Installation ############
+# Riak Installation and Configuration
+# Install java for solr, riak package from basho official packagecloud repository
+# configure system for riak
+# configure riak installation
 
 # java install for solr
 apt-add-repository ppa:webupd8team/java -y && apt-get -y update
 echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | /usr/bin/debconf-set-selections
 apt-get install -y oracle-java8-installer
 
-# ===================================== # Riak Installation and Configuration BEGIN ======================================
 # riak package
 curl -s https://packagecloud.io/install/repositories/basho/riak/script.deb.sh | sudo bash
-apt-get install -y riak
+sudo apt-get -y install riak=2.2.0-1
 
 # service stop and wait
 service riak stop
@@ -86,16 +91,22 @@ multi_backend.leveldb_mult.storage_backend = leveldb
 multi_backend.leveldb_mult.leveldb.data_root = /var/lib/riak/leveldb_mult
 multi_backend.default = bitcask_mult
 search.solr.jvm_options = -d64 -Xms512m -Xmx512m -XX:+UseStringCache -XX:+UseCompressedOops" >> /etc/riak/riak.conf
+######## Riak Installation ############
 
-# ===================================== # Riak Installation END ==========================================================
 
+######## Riak Installation ############
+# Install Redis
+# bind it 0.0.0.0 to access from host machine
 
-# Redis Installation
 apt-get install -y redis-server
 sed -i "s/bind 127.0.0.1/bind 0.0.0.0/" /etc/redis/redis.conf
+######## Riak Installation ############
 
 
-# ===================================== # Zato Installation and Configuration BEGIN ====================================
+######## Zato Installation ############
+# Install Zato Quickstart Cluster for 1 node
+# Create a ulakbus cluster, changes its webadmin password
+# Create symbolic links of python packages of ulakbus and related libs
 
 curl -s https://zato.io/repo/zato-0CBD7F72.pgp.asc | sudo apt-key add -
 apt-add-repository https://zato.io/repo/stable/2.0/ubuntu -y
@@ -123,60 +134,39 @@ password=ulakbus' > ~/ulakbus/zatopw.conf
 zato from-config ~/ulakbus/zatopw.conf
 "
 
-apt-get install -y virtualenvwrapper
+# Create symbolic links for zato project to start them at login
+ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
+ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
+ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
+######## Zato Installation ############
 
+
+######## Ulakbus Installation ############
+# creates ulabus user
+# creates an virtual python environment
+# and install ulakbus' requirements
+
+# ulakbus user
 mkdir /app
 /usr/sbin/useradd --home-dir /app --shell /bin/bash --comment 'ulakbus operations' ulakbus
 chown ulakbus:ulakbus /app -Rf
 
-#Add ulakbus user to sudoers
+# make ulakbus sudoer
 adduser ulakbus sudo
 
 sudo su - ulakbus sh -c "
+# go home
 cd ~
 
-#environment variables specific to all libs
-mkdir env-vars
-cd env-vars
-wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/ulakbus_postactivate
-wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/pyoko_postactivate
-wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/zengine_postactivate
-
-cd ~
-#ulakbus virtualenv
+# ulakbus virtualenv
 virtualenv --no-site-packages ulakbusenv
-cat ~/env-vars/ulakbus_postactivate >> ~/ulakbusenv/bin/activate
 
-echo '
+wget https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/env-vars/ulakbus_postactivate
+cat ~/ulakbus_postactivate >> ~/ulakbusenv/bin/activate
 
-# ulakbus-env variables
-export ZENGINE_SETTINGS=ulakbus.settings
-export LC_CTYPE=en_US.UTF-8
-export RIAK_PORT=8098
-export REDIS_SERVER=127.0.0.1:6379
-export RIAK_SERVER=127.0.0.1
-export RIAK_PROTOCOL=http
-export PYOKO_SETTINGS=ulakbus.settings
-export PYTHONUNBUFFERED=1
-export DEFAULT_BUCKET_TYPE='models'
-export LOG_HANDLER='file'
-export LOG_FILE='/app/logs/ulakbus.log'
-export DEBUG=1
-export DEBUG_LEVEL=11
-export MQ_VHOST=ulakbus
-export MQ_PASS=123
-export MQ_USER=ulakbus ' >> ~/ulakbusenv/bin/activate
-
-# necessary for LOG_FILE env-var
+# log dir
 mkdir /app/logs/
 
-#pyoko virtualenv
-virtualenv --no-site-packages pyokoenv
-cat ~/env-vars/pyoko_postactivate >> ~/pyokoenv/bin/activate
-
-#zengine virtualenv
-virtualenv --no-site-packages zengineenv
-cat ~/env-vars/zengine_postactivate >> ~/zengineenv/bin/activate
 
 # clone pyoko from github
 git clone https://github.com/zetaops/pyoko.git
@@ -187,11 +177,8 @@ git clone https://github.com/zetaops/zengine.git
 # clone ulakbus from github
 git clone https://github.com/zetaops/ulakbus.git
 
-# clone faker from github
-git clone https://github.com/zetaops/faker.git
 
-# =========== ulakbus BEGIN =========
-#activate ulakbusenv
+# activate ulakbusenv
 source ~/ulakbusenv/bin/activate
 
 pip install --upgrade pip
@@ -200,51 +187,8 @@ pip install ipython
 cd ~/ulakbus
 pip install -r requirements/develop.txt
 
-pip uninstall --y Pyoko
-pip uninstall --y pyoko
-pip uninstall --y zengine
-
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/Pyoko*
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/pyoko*
-rm -rf ~/ulakbusenv/lib/python2.7/site-packages/zengine*
 
 deactivate
-# =========== ulakbus END =========
-
-
-
-# =========== pyoko BEGIN =========
-#activate pyokoenv
-source ~/pyokoenv/bin/activate
-
-pip install --upgrade pip
-pip install ipython
-
-cd ~/pyoko
-pip install -r requirements/default.txt
-
-deactivate
-# =========== pyoko END =========
-
-
-
-# =========== zengine BEGIN =========
-#activate zengineenv
-source ~/zengineenv/bin/activate
-
-pip install --upgrade pip
-pip install ipython
-
-cd ~/zengine
-pip install -r requirements/default.txt
-
-pip uninstall --y Pyoko
-
-rm -rf ~/zengineenv/lib/python2.7/site-packages/Pyoko*
-
-deactivate
-# =========== zengine END =========
-
 
 # Copy libraries: pyoko, ulakbus, zengine to ulakbusenv
 ln -s ~/pyoko/pyoko      ~/ulakbusenv/lib/python2.7/site-packages
@@ -254,54 +198,41 @@ ln -s ~/ulakbus/tests    ~/ulakbusenv/lib/python2.7/site-packages
 ln -s ~/faker/faker      ~/ulakbusenv/lib/python2.7/site-packages
 
 # Necessary to use riak from zato user
-touch ~/ulakbusenv/lib/python2.7/site-packages/google/__init__.py
-
-# Copy libraries: pyoko, zengine to zengineenv
-ln -s ~/pyoko/pyoko       ~/zengineenv/lib/python2.7/site-packages
-ln -s ~/zengine/zengine   ~/zengineenv/lib/python2.7/site-packages
-ln -s ~/zengine/tests     ~/zengineenv/lib/python2.7/site-packages
-
-# Copy libraries: pyoko to pyokoenv
-ln -s ~/pyoko/pyoko   ~/pyokoenv/lib/python2.7/site-packages
-ln -s ~/pyoko/tests   ~/pyokoenv/lib/python2.7/site-packages
-# end
-"
+touch ~/ulakbusenv/lib/python2.7/site-packages/google/__init__.py"
 
 # Create symbolic links for all dependecies and pyoko, zengine, ulakbus for Zato
 # Since zato installations based on version numbers, I used wildcards while creating symbolic links
 #
 sudo su - zato sh -c "
-ln -s /app/pyoko/pyoko                                                 /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/zengine/zengine                                             /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbus/ulakbus                                             /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/riak                 /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/redis                /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/SpiffWorkflow        /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/werkzeug             /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/lazy_object_proxy    /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/falcon               /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/beaker               /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/beaker_extensions    /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/passlib              /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/google               /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/enum                 /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/celery               /opt/zato/2.*.*/zato_extra_paths/
-ln -s /app/ulakbusenv/lib/python2.7/site-packages/funcsigs             /opt/zato/2.*.*/zato_extra_paths/
+ln -s /app/pyoko/pyoko                                                 /opt/zato/current/zato_extra_paths/
+ln -s /app/zengine/zengine                                             /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbus/ulakbus                                             /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/riak                 /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/redis                /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/SpiffWorkflow        /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/werkzeug             /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/lazy_object_proxy    /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/falcon               /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/beaker               /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/beaker_extensions    /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/passlib              /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/google               /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/enum                 /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/celery               /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/funcsigs             /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/streamingxmlwriter   /opt/zato/current/zato_extra_paths/
+ln -s /app/ulakbusenv/lib/python2.7/site-packages/babel                /opt/zato/current/zato_extra_paths/
 "
-
-# Create symbolic links for zato project to start them at login
-
-ln -s /opt/zato/ulakbus/load-balancer /etc/zato/components-enabled/ulakbus.load-balancer
-ln -s /opt/zato/ulakbus/server1 /etc/zato/components-enabled/ulakbus.server1
-ln -s /opt/zato/ulakbus/web-admin /etc/zato/components-enabled/ulakbus.web-admin
-
-# Start zato service
-service zato start
-# ===================================== # Zato Installation and Configuration END ======================================
+######## Ulakbus Installation ############
 
 
 
-# ===================================== # Riak Post Configuration BEGIN ================================================
+######## Service Post Installation ############
+# create riak bucket types
+# activate buckets
+#
+# rabbitmq add virtualhost ulakbus
+#
 service riak start
 sleep 30
 
@@ -318,25 +249,29 @@ riak-admin bucket-type activate models
 riak-admin bucket-type activate catalog
 riak-admin bucket-type activate log_version
 
-# ===================================== # Riak Post Configuration END ====================================================
 
 # Rabbitmq Ulakbus Configuration
 rabbitmqctl add_vhost ulakbus
 rabbitmqctl add_user ulakbus 123
 rabbitmqctl set_permissions -p ulakbus ulakbus ".*" ".*" ".*"
+######## Service Post Installation ############
 
-# Initial migration of ulakbus models and load fixtures
+######## Initial migration of ulakbus models and load fixtures ############
+#
 sudo su - ulakbus sh -c "
 cd ~
 source ~/ulakbusenv/bin/activate
 pip install lxml
 python ~/ulakbus/ulakbus/manage.py migrate --model all
 python ~/ulakbus/ulakbus/manage.py load_data --path ~/ulakbus/tests/fixtures/
+sleep 2
 python ~/ulakbus/ulakbus/manage.py load_diagrams
 python ~/ulakbus/ulakbus/manage.py load_fixture --path ~/ulakbus/ulakbus/fixtures/
 python ~/ulakbus/ulakbus/manage.py preparemq
+python manage.py compile_translations
 deactivate
 "
+######## Initial migration of ulakbus models and load fixtures ############
 
 # Clean up
 apt-get -y autoremove

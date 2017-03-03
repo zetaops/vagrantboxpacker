@@ -1,21 +1,30 @@
-PYTHONIOENCODING=UTF-8
-ZENGINE_SETTINGS='ulakbus.settings'
-LC_CTYPE=en_US.UTF-8
-RIAK_PORT=8098
-REDIS_SERVER=127.0.0.1:6379
-RIAK_SERVER=127.0.0.1
-RIAK_PROTOCOL=http
-PYOKO_SETTINGS='ulakbus.settings'
-PYTHONUNBUFFERED=1
-DEFAULT_BUCKET_TYPE='models'
+# settings module
+export PYOKO_SETTINGS=ulakbus.settings
 
-export PYTHONIOENCODING=UTF-8
-export ZENGINE_SETTINGS='ulakbus.settings'
-export LC_CTYPE=en_US.UTF-8
+# riak settings
 export RIAK_PORT=8098
 export REDIS_SERVER=127.0.0.1:6379
 export RIAK_SERVER=127.0.0.1
 export RIAK_PROTOCOL=http
-export PYOKO_SETTINGS='ulakbus.settings'
-export PYTHONUNBUFFERED=1
 export DEFAULT_BUCKET_TYPE='models'
+
+# log settings
+export LOG_HANDLER='file'
+export LOG_FILE='/app/logs/ulakbus.log'
+export DEBUG=1
+export DEBUG_LEVEL=11
+
+# mq settings
+export MQ_VHOST=ulakbus
+export MQ_PASS=123
+export MQ_USER=ulakbus
+
+# needed to prevent module import errors
+export HITAP_USER=''
+export HITAP_PASS=''
+
+# enable redis caching
+export ENABLE_CACHING=True
+
+# various
+export LC_CTYPE=en_US.UTF-8

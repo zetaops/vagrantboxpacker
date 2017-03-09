@@ -225,6 +225,19 @@ ln -s /app/ulakbusenv/lib/python2.7/site-packages/babel                /opt/zato
 "
 ######## Ulakbus Installation ############
 
+######## Zato Apimox ##########
+# installs apimox
+# adds a system service
+sudo su - ulakbus sh -c "
+cd ~
+virtualenv apimox
+source apimox/bin/activate
+pip install zato-apimox
+"
+wget -O /etc/init.d/apimox https://raw.githubusercontent.com/zetaops/ulakbus-development-box/master/scripts/services/apimox
+chmod a+x /etc/init.d/apimox
+update-rc.d apimox defaults
+######## Zato Apimox ##########
 
 
 ######## Service Post Installation ############

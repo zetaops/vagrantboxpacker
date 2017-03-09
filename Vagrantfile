@@ -23,13 +23,19 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
 
-  config.vm.network "forwarded_port", guest: 9001, host: 9001 # ulakbus backend
-  config.vm.network "forwarded_port", guest: 8183, host: 8183 # zato web admin
-  config.vm.network "forwarded_port", guest: 8098, host: 8098 # riak http
-  config.vm.network "forwarded_port", guest: 8087, host: 8087 # riak protocol buffers
-  config.vm.network "forwarded_port", guest: 6379, host: 6379 # redis-server
-  config.vm.network "forwarded_port", guest: 8093, host: 8093 # solr web ui
-  config.vm.network "forwarded_port", guest: 5672, host: 5672 # rabbitmq 
+  config.vm.network "forwarded_port", guest: 9001, host: 9001   # ulakbus server
+
+  config.vm.network "forwarded_port", guest: 8093, host: 8093   # solr
+  config.vm.network "forwarded_port", guest: 8098, host: 8098   # riak http
+  config.vm.network "forwarded_port", guest: 8087, host: 8087   # riak protocol buffers
+
+  config.vm.network "forwarded_port", guest: 6379, host: 6379   # redis
+  config.vm.network "forwarded_port", guest: 5672, host: 5672   # rabbitmq
+
+  config.vm.network "forwarded_port", guest: 8183, host: 8183   # zato web admin
+  config.vm.network "forwarded_port", guest: 11223, host: 11223 # zato lb
+  config.vm.network "forwarded_port", guest: 20151, host: 20151 # zato agent lb
+
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -46,10 +52,12 @@ Vagrant.configure(2) do |config|
   # argument is a set of non-required options.
   # config.vm.synced_folder "shared/", "/vagrant_data"
 
-  # config.vm.synced_folder "~/dev/zetaops/ulakbus", "/app/ulakbus", owner: "ulakbus", group: "ulakbus"
-  # config.vm.synced_folder "~/dev/zetaops/zengine", "/app/zengine", owner: "ulakbus", group: "ulakbus"
-  # config.vm.synced_folder "~/dev/zetaops/pyoko", "/app/pyoko", owner: "ulakbus", group: "ulakbus"
-  # config.vm.synced_folder "~/dev/zetaops/ulakbus-ui", "/app/ulakbus-ui", owner: "ulakbus", group: "ulakbus"
+  config.vm.synced_folder "~/dev/src/ulakbus", "/app/ulakbus", owner: "ulakbus", group: "ulakbus"
+  config.vm.synced_folder "~/dev/src/zengine", "/app/zengine", owner: "ulakbus", group: "ulakbus"
+  config.vm.synced_folder "~/dev/src/pyoko", "/app/pyoko", owner: "ulakbus", group: "ulakbus"
+  config.vm.synced_folder "~/dev/src/ulakbus-ui", "/app/ulakbus-ui", owner: "ulakbus", group: "ulakbus"
+  config.vm.synced_folder "~/dev/src/SpiffWorkflow", "/app/SpiffWorkflow", owner: "ulakbus", group: "ulakbus"
+  config.vm.synced_folder "~/dev/src/faker", "/app/faker", owner: "ulakbus", group: "ulakbus"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -60,7 +68,8 @@ Vagrant.configure(2) do |config|
   #   vb.gui = true
   #
   #   # Customize the amount of memory on the VM:
-     vb.memory = "2048"
+     vb.memory = 3072
+     vb.cpus = 3
   end
   #
   # View the documentation for the provider you are using for more
